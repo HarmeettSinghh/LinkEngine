@@ -3,7 +3,7 @@ package com.url.shortner.models;
 import jakarta.persistence.*;
 import lombok.Data;
 @Entity
-@Table(name = "users")
+@Table(name = "users v")
 @Data
 public class User {
     @Id
