@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +24,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
+
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -37,20 +38,28 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Spring Security 7 requires UserDetailsService in the constructor —
+     * the no-arg constructor was removed.
+     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        // Spring Security 7: must pass UserDetailsService to constructor
+        DaoAuthenticationProvider authProvider =
+                new DaoAuthenticationProvider(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
+    /**
+     * Expose AuthenticationManager as a bean so UserService can inject it.
+     * AuthenticationConfiguration auto-discovers the DaoAuthenticationProvider
+     * bean registered above.
+     */
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authManagerBuilder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
-        authManagerBuilder.authenticationProvider(authenticationProvider());
-        return authManagerBuilder.build();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
@@ -67,7 +76,6 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
@@ -86,4 +94,4 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-}
+}
