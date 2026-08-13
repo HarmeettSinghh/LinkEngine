@@ -307,7 +307,7 @@ export default function AnalyticsPage() {
             </div>
             <div className="font-headline-md text-headline-md text-on-surface">{totalLinksCount}</div>
             <div className="font-code-sm text-code-sm text-secondary">
-              Across domain pools
+              Across user account
             </div>
           </div>
 

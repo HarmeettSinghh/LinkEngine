@@ -99,7 +99,7 @@ export default function RegisterPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="SysAdmin_01"
+                placeholder="Harmeet"
                 className="input-tech rounded p-sm font-code-sm text-code-sm"
                 required
               />
@@ -114,7 +114,7 @@ export default function RegisterPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@linkengine.io"
+                placeholder="harmeet@email.com"
                 className="input-tech rounded p-sm font-code-sm text-code-sm"
                 required
               />

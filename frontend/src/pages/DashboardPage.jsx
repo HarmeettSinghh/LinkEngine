@@ -106,7 +106,7 @@ export default function DashboardPage() {
       <header className="mb-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-lg">
         <div>
           <h2 className="font-headline-md text-headline-md md:font-display-lg md:text-display-lg text-on-background">
-            Welcome back, {user?.sub || user?.username || 'User'}
+            Welcome back, {user?.username || user?.sub || 'User'}
           </h2>
           <p className="font-body-lg text-body-lg text-on-surface-variant mt-sm">
             Here's a quick overview of your links today.

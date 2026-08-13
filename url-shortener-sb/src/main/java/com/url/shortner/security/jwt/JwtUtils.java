@@ -34,6 +34,7 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetailsImpl userDetails) {
+        String email = userDetails.getEmail();
         String username = userDetails.getUsername();
 
         String roles = userDetails.getAuthorities().stream()
@@ -41,7 +42,8 @@ public class JwtUtils {
                 .collect(Collectors.joining(","));
 
         return Jwts.builder()
-                .subject(username)
+                .subject(email)
+                .claim("username", username)
                 .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
@@ -74,10 +76,10 @@ public class JwtUtils {
             return true;
 
         } catch (JwtException e) {
-            throw new RuntimeException(e);
+            return false;
 
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 }

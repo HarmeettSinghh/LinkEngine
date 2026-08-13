@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../App';
 import Navbar from '../components/Navbar';
@@ -6,49 +6,16 @@ import BrandLogo from '../components/BrandLogo';
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
-  const [demoInput, setDemoInput] = useState('');
-  const [demoResult, setDemoResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const handleDemoShorten = (e) => {
-    e.preventDefault();
-    if (!demoInput) return;
-
-    setLoading(true);
-    setDemoResult('');
-
-    setTimeout(() => {
-      // client-side demo shortened hashing mimicking Stitch landing view
-      const hash = Math.random().toString(36).substring(2, 7);
-      setDemoResult(`http://localhost:8080/${hash}`);
-      setLoading(false);
-    }, 800);
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(demoResult);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleGetStarted = () => {
+    navigate(isAuthenticated ? '/dashboard' : '/register');
   };
 
   const handleManageLinks = () => {
-    if (isAuthenticated) {
-      navigate('/my-links');
-    } else {
-      navigate('/login');
-    }
+    navigate(isAuthenticated ? '/my-links' : '/login');
   };
 
-  const handleCreateShortLink = () => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    } else {
-      navigate('/register');
-    }
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0B0B0B] text-on-surface">
@@ -81,110 +48,51 @@ export default function LandingPage() {
               Generate precise technical aliases for your long web links, track client-side request data telemetry, and redirect users with sub-millisecond response rates.
             </p>
 
-            {/* URL Shortener Demo Tool */}
-            <div className="w-full max-w-2xl card-surface rounded-lg p-sm mb-xl shadow-2xl shadow-black/50">
-              <form onSubmit={handleDemoShorten} className="flex flex-col md:flex-row gap-sm w-full">
-                <div className="relative flex-grow flex items-center">
-                  <span className="material-symbols-outlined absolute left-md text-on-surface-variant">
-                    link
-                  </span>
-                  <input
-                    type="url"
-                    value={demoInput}
-                    onChange={(e) => setDemoInput(e.target.value)}
-                    className="input-tech w-full py-md pl-xl pr-md rounded-md focus:border-[#FF6B2C] focus:ring-0"
-                    placeholder="https://your-long-url.com/path?param=value"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn-primary px-lg py-md rounded-md font-label-caps whitespace-nowrap flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    <span className="material-symbols-outlined animate-spin">progress_activity</span>
-                  ) : (
-                    <>
-                      <span>Shorten Link</span>
-                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </>
-                  )}
-                </button>
-              </form>
-
-              {/* Result Area */}
-              {demoResult && (
-                <div className="mt-sm p-md bg-surface-level-2 border border-border-subtle rounded-md flex justify-between items-center transition-all duration-300">
-                  <div className="flex items-center gap-sm overflow-hidden">
-                    <span className="font-code-md text-[#FF6B2C] truncate font-bold">{demoResult}</span>
-                  </div>
-                  <button
-                    onClick={handleCopy}
-                    className="p-xs text-on-surface-variant hover:text-white transition-colors flex items-center"
-                    title="Copy to clipboard"
-                  >
-                    <span className="material-symbols-outlined">
-                      {copied ? 'check' : 'content_copy'}
-                    </span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Authentic SaaS CTA Workflow buttons */}
-            <div className="flex flex-wrap justify-center gap-md">
+              {/* Primary CTA Buttons */}
+            <div className="flex flex-wrap justify-center gap-md mt-xl">
+              <button
+                onClick={handleGetStarted}
+                className="btn-primary px-xl py-md rounded-lg font-label-caps tracking-widest text-label-caps flex items-center gap-sm"
+              >
+                <span className="material-symbols-outlined text-[18px]">add_link</span>
+                {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
+              </button>
               <button
                 onClick={handleManageLinks}
-                className="btn-primary px-lg py-md rounded font-label-caps tracking-widest text-label-caps"
+                className="btn-secondary px-xl py-md rounded-lg font-label-caps tracking-widest text-label-caps flex items-center gap-sm"
               >
-                {isAuthenticated ? 'Manage Links' : 'Login to Manage'}
-              </button>
-              <button
-                onClick={handleCreateShortLink}
-                className="btn-secondary px-lg py-md rounded font-label-caps tracking-widest text-label-caps"
-              >
-                {isAuthenticated ? 'Dashboard Shortener' : 'Get Started Free'}
+                <span className="material-symbols-outlined text-[18px]">link</span>
+                {isAuthenticated ? 'My Links' : 'Sign In'}
               </button>
             </div>
 
-            {/* Premium Brand CSS Graphic representation */}
-            <div className="relative w-full max-w-lg h-64 bg-surface-level-2 border border-border-subtle rounded-lg overflow-hidden flex items-center justify-center p-md mt-xl">
+            {/* Brand Flow Graphic */}
+            <div className="relative w-full max-w-lg h-56 bg-surface-level-2 border border-border-subtle rounded-lg overflow-hidden flex items-center justify-center p-md mt-xl">
               <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
-              
               <div className="flex items-center justify-between w-full px-lg relative z-10">
-                {/* Node 1 */}
                 <div className="flex flex-col items-center gap-xs">
                   <div className="w-12 h-12 rounded-full bg-[#151515] border border-border-subtle flex items-center justify-center text-on-surface-variant hover:border-[#FF6B2C] hover:text-[#FF6B2C] transition-colors duration-300">
                     <span className="material-symbols-outlined">link</span>
                   </div>
                   <span className="font-code-sm text-[10px] text-on-surface-variant uppercase">Original Link</span>
                 </div>
-                
-                {/* Line 1 */}
                 <div className="flex-grow h-[2px] bg-gradient-to-r from-border-subtle via-[#FF6B2C] to-border-subtle mx-md relative">
                   <div className="absolute top-1/2 left-0 -translate-y-1/2 w-2 h-2 rounded-full bg-[#FF6B2C] animate-pulse"></div>
                 </div>
-
-                {/* Brand Center Node */}
                 <div className="flex flex-col items-center gap-xs">
                   <div className="w-16 h-16 rounded-full bg-[#1E1E1E] border-2 border-[#FF6B2C] flex items-center justify-center text-[#FF6B2C] shadow-lg shadow-[#FF6B2C]/20">
                     <BrandLogo className="w-8 h-8" />
                   </div>
                   <span className="font-code-sm text-[10px] text-primary font-bold uppercase tracking-wider">LinkEngine</span>
                 </div>
-
-                {/* Line 2 */}
                 <div className="flex-grow h-[2px] bg-gradient-to-r from-border-subtle via-[#FF6B2C] to-border-subtle mx-md relative">
                   <div className="absolute top-1/2 right-0 -translate-y-1/2 w-2 h-2 rounded-full bg-[#FF6B2C] animate-pulse"></div>
                 </div>
-
-                {/* Node 3 */}
                 <div className="flex flex-col items-center gap-xs">
                   <div className="w-12 h-12 rounded-full bg-[#151515] border border-border-subtle flex items-center justify-center text-on-surface-variant hover:border-[#FF6B2C] hover:text-[#FF6B2C] transition-colors duration-300">
                     <span className="material-symbols-outlined">analytics</span>
                   </div>
-                  <span className="font-code-sm text-[10px] text-on-surface-variant uppercase">Redirection</span>
+                  <span className="font-code-sm text-[10px] text-on-surface-variant uppercase">Track & Redirect</span>
                 </div>
               </div>
             </div>

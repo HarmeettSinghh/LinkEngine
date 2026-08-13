@@ -14,8 +14,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class JwtAuthentictonFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthentictonFilter.class);
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -64,7 +70,11 @@ public class JwtAuthentictonFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // Log but do NOT rethrow — a bad/missing token means the request
+            // proceeds unauthenticated. Spring Security's authorization rules
+            // will then allow or deny it. Re-throwing here blocks ALL requests
+            // including public login/register endpoints.
+            logger.error("Cannot set user authentication: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

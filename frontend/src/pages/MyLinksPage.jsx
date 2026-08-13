@@ -50,13 +50,6 @@ export default function MyLinksPage() {
     setTimeout(() => setCopiedLink(''), 2000);
   };
 
-  const handleDeleteMock = (shortCode) => {
-    // Notify the user that delete is not supported by the backend
-    setToastType('error');
-    setToastMessage('Delete Not Supported');
-    setToastDesc('The backend API does not currently expose a delete mapping.');
-    setShowToast(true);
-  };
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -129,10 +122,10 @@ export default function MyLinksPage() {
       </header>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-lg mb-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-lg mb-2xl">
         <div className="surface-card rounded-lg p-lg bg-level-1">
           <div className="flex justify-between items-start mb-md border-b border-[#292929] pb-sm">
-            <span className="font-label-caps text-label-caps text-on-surface-variant">Total Clicks (30d)</span>
+            <span className="font-label-caps text-label-caps text-on-surface-variant">Total Clicks (All Time)</span>
             <span className="material-symbols-outlined text-primary text-[20px] text-accent-primary">touch_app</span>
           </div>
           <div className="font-display-lg text-display-lg text-on-background">{totalClicks}</div>
@@ -149,19 +142,6 @@ export default function MyLinksPage() {
           </div>
           <div className="font-display-lg text-display-lg text-on-background">{links.length}</div>
           <div className="font-body-sm text-body-sm text-on-surface-variant mt-xs">Across user account</div>
-        </div>
-
-        <div className="surface-card rounded-lg p-lg relative overflow-hidden group cursor-pointer hover:border-primary transition-colors bg-level-1">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="relative z-10 flex flex-col h-full justify-between">
-            <div>
-              <div className="font-label-caps text-label-caps text-primary mb-xs text-accent-primary">Pro Tip</div>
-              <h3 className="font-headline-sm text-headline-sm text-on-background">Boost Conversion</h3>
-            </div>
-            <p className="font-body-sm text-body-sm text-on-surface-variant mt-md">
-              Enable UTM parameter pass-through on your top 5 performing links.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -236,13 +216,6 @@ export default function MyLinksPage() {
                         >
                           <span className="material-symbols-outlined text-[18px]">bar_chart</span>
                         </Link>
-                        <button
-                          onClick={() => handleDeleteMock(link.shortURl)}
-                          className="p-xs hover:text-error transition-colors flex items-center text-[#ffb4ab]"
-                          title="Delete"
-                        >
-                          <span className="material-symbols-outlined text-[18px]">delete</span>
-                        </button>
                       </div>
                     </td>
                   </tr>
@@ -296,13 +269,6 @@ export default function MyLinksPage() {
                   >
                     <span className="material-symbols-outlined text-[18px]">bar_chart</span>
                   </Link>
-                  <button
-                    onClick={() => handleDeleteMock(link.shortURl)}
-                    className="p-xs text-on-surface-variant hover:text-[#ffb4ab]"
-                    title="Delete"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">delete</span>
-                  </button>
                 </div>
               </div>
             ))

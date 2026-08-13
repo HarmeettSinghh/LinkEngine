@@ -35,7 +35,7 @@ public class UrlMappingController {
 
         String originalUrl = request.get("originalUrl");
 
-        User user = userService.findByUsername(principal.getName());
+        User user = userService.findByEmail(principal.getName());
 
         UrlMappingDTO urlMappingDTO =
                 urlMappingService.createShortUrl(originalUrl, user);
@@ -45,8 +45,8 @@ public class UrlMappingController {
 
     @GetMapping("/myurls")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<UrlMappingDTO>>getUserUrls(Principal principal){
-        User user = userService.findByUsername(principal.getName());
+    public ResponseEntity<List<UrlMappingDTO>> getUserUrls(Principal principal){
+        User user = userService.findByEmail(principal.getName());
         List<UrlMappingDTO> urls = urlMappingService.getUrlsByUser(user);
         return ResponseEntity.ok(urls);
     }

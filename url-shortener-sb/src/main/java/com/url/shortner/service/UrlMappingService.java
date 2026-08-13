@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,14 +58,18 @@ public class UrlMappingService {
     }
 
     private String generateShortUrl() {
-       String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-       Random random = new Random();
-       StringBuilder shortUrl = new StringBuilder();
-       for(int i =0; i<8; i++){
-           shortUrl.append(characters.charAt(random.nextInt(characters.length())));
-
-        }
-       return shortUrl.toString();
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        Random random = new Random();
+        String shortUrl;
+        // Regenerate until unique
+        do {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 8; i++) {
+                sb.append(characters.charAt(random.nextInt(characters.length())));
+            }
+            shortUrl = sb.toString();
+        } while (urlMappingRepository.findByShortUrl(shortUrl) != null);
+        return shortUrl;
     }
 
     public List<UrlMappingDTO> getUrlsByUser(User user) {

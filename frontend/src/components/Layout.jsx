@@ -37,7 +37,6 @@ export default function Layout({ children }) {
             </div>
             <div>
               <h1 className="font-headline-sm text-headline-sm font-bold text-white tracking-tight">LinkEngine</h1>
-              <p className="font-body-sm text-body-sm text-on-surface-variant">Pro Plan</p>
             </div>
           </div>
           <button
