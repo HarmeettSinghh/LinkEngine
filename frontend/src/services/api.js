@@ -13,15 +13,15 @@ const getHeaders = () => {
 
 export const api = {
   // Public auth endpoints
-  login: async (username, password) => {
+  login: async (email, password) => {
     const response = await fetch(`${BASE_URL}/api/auth/public/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     });
     if (!response.ok) {
       const errText = await response.text();
-      throw new Error(errText || 'Invalid username or password');
+      throw new Error(errText || 'Invalid email or password');
     }
     return response.json(); // returns { token: "..." }
   },

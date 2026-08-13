@@ -4,11 +4,31 @@ import { AuthContext } from '../App';
 import { api } from '../services/api';
 import Toast from '../components/Toast';
 
+// Parse a friendly message from a raw server error string/JSON
+function parseFriendlyError(raw) {
+  if (!raw) return 'Invalid username or password.';
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed.message) return parsed.message;
+    if (parsed.error) return parsed.error;
+  } catch (_) {}
+  if (raw.toLowerCase().includes('bad credentials') || raw.toLowerCase().includes('unauthorized')) {
+    return 'Invalid username or password.';
+  }
+  if (raw.toLowerCase().includes('forbidden')) {
+    return 'Access denied. Please check your credentials.';
+  }
+  if (raw.toLowerCase().includes('not found')) {
+    return 'Account not found. Please register first.';
+  }
+  return 'Something went wrong. Please try again.';
+}
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
@@ -23,15 +43,15 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !password) return;
+    if (!email || !password) return;
 
     setLoading(true);
     setErrorMsg('');
 
     try {
-      const response = await api.login(username, password);
+      const response = await api.login(email, password);
       setToastType('success');
-      setToastMessage('Authentication Successful');
+      setToastMessage('Welcome back!');
       setToastDesc('Logged in successfully. Redirecting...');
       setShowToast(true);
 
@@ -40,116 +60,152 @@ export default function LoginPage() {
         navigate('/dashboard');
       }, 1500);
     } catch (err) {
-      setErrorMsg(err.message || 'Login failed');
+      const friendly = parseFriendlyError(err.message);
+      setErrorMsg(friendly);
       setToastType('error');
-      setToastMessage('Authentication Failed');
-      setToastDesc(err.message || 'Invalid username or password');
+      setToastMessage('Login Failed');
+      setToastDesc(friendly);
       setShowToast(true);
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center font-body-md text-body-md bg-custom-bg antialiased selection:bg-custom-primary selection:text-white">
-      <main className="w-full max-w-[420px] px-md md:px-0 relative z-10">
-        <div className="bg-custom-surface border border-custom-border rounded-lg shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden">
-          
-          {/* Header Area */}
-          <div className="p-lg border-b border-custom-border flex flex-col items-center justify-center space-y-md">
-            <div className="w-16 h-16 rounded-full overflow-hidden border border-custom-border bg-custom-bg flex items-center justify-center">
-              <img
-                alt="LinkEngine Logo"
-                className="w-12 h-12 object-contain"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1VgH5ap4djWwyCDCmg4fk7oU-ZvyBvEbUzPQU0SSTumfqdGd3z-Gk7nQJk6PfuCCHoQYGdiFZfV4C1hn5u86Kkga72Jx00TTaka4sRysjv3HXhTRPEOYa0fjbegWuaztVoXvdNJogqwkPwrgBbsJ3zPsagKXN6Owp1LlorgVB3WQx5YrHc8TiPSb0Pa9Rrl9npA6gI7c-ogF0hadpyXO_VIqGiAdHrXjpRjbICH5tWcRfrpVMPzT8"
-              />
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0B0B] antialiased selection:bg-[#FF6B2C] selection:text-white relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full bg-[#FF6B2C]/5 blur-[130px] pointer-events-none" />
+
+      {/* Grid bg */}
+      <div className="absolute inset-0 pointer-events-none opacity-10">
+        <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern height="40" id="login-grid" patternUnits="userSpaceOnUse" width="40">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#333" strokeWidth="0.8" />
+            </pattern>
+          </defs>
+          <rect fill="url(#login-grid)" height="100%" width="100%" />
+        </svg>
+      </div>
+
+      <main className="w-full max-w-[420px] px-4 md:px-0 relative z-10">
+        <div className="bg-[#111111] border border-[#222222] rounded-2xl shadow-[0_32px_64px_rgba(0,0,0,0.75)] overflow-hidden">
+
+          {/* Header */}
+          <div className="px-8 pt-10 pb-7 border-b border-[#1c1c1c] flex flex-col items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-[#181818] border border-[#282828] flex items-center justify-center shadow-[0_0_28px_rgba(255,107,44,0.18)]">
+              <span className="material-symbols-outlined text-[26px] text-[#FF6B2C]">link</span>
             </div>
-            <h1 className="font-headline-md text-headline-md text-on-surface">Sign in to LinkEngine</h1>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">Access your link management dashboard.</p>
+            <div className="text-center">
+              <h1 className="text-[21px] font-semibold text-[#f0e8e4] tracking-tight">Sign in to LinkEngine</h1>
+              <p className="text-[13px] text-[#5a5a5a] mt-1">Manage and track your links in one place</p>
+            </div>
           </div>
 
-          {/* Form Area */}
-          <form onSubmit={handleSubmit} className="p-lg space-y-lg">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="px-8 py-7 space-y-5">
             {errorMsg && (
-              <div className="p-md rounded bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 text-[#ffb4ab] text-body-sm">
-                {errorMsg}
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-[#ff3333]/8 border border-[#ff3333]/20 text-[#ff8080] text-[13px]">
+                <span className="material-symbols-outlined text-[17px] flex-shrink-0 mt-0.5">error_outline</span>
+                <span>{errorMsg}</span>
               </div>
             )}
 
-            <div className="space-y-sm">
-              <label className="block font-label-caps text-label-caps text-on-surface" htmlFor="username">
-                Username
+            {/* Email */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-semibold text-[#666] tracking-widest uppercase" htmlFor="email">
+                Email
               </label>
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="SysAdmin_01"
-                className="w-full input-field border rounded px-md py-sm font-code-md text-code-md transition-colors duration-200"
-                required
-              />
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none">
+                  <span className="material-symbols-outlined text-[16px] text-[#444]">mail</span>
+                </span>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="harmeet@linkengine.io"
+                  className="w-full bg-[#0d0d0d] border border-[#232323] rounded-xl pl-10 pr-4 py-3 text-[13px] text-[#e0d8d4] placeholder-[#383838] transition-all duration-200 focus:outline-none focus:border-[#FF6B2C] focus:shadow-[0_0_0_3px_rgba(255,107,44,0.10)]"
+                  required
+                  autoComplete="email"
+                />
+              </div>
             </div>
 
-            <div className="space-y-sm">
+            {/* Password */}
+            <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="block font-label-caps text-label-caps text-on-surface" htmlFor="password">
+                <label className="text-[11px] font-semibold text-[#666] tracking-widest uppercase" htmlFor="password">
                   Password
                 </label>
-                <a className="font-body-sm text-body-sm text-custom-primary hover:underline animate-pulse" href="#forgot">
+                <a className="text-[12px] text-[#FF6B2C] hover:text-[#ff8a50] transition-colors" href="#forgot">
                   Forgot password?
                 </a>
               </div>
               <div className="relative">
+                <span className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none">
+                  <span className="material-symbols-outlined text-[16px] text-[#444]">lock</span>
+                </span>
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full input-field border rounded px-md py-sm font-code-md text-code-md transition-colors duration-200 pr-12"
+                  placeholder="Enter your password"
+                  className="w-full bg-[#0d0d0d] border border-[#232323] rounded-xl pl-10 pr-12 py-3 text-[13px] text-[#e0d8d4] placeholder-[#383838] transition-all duration-200 focus:outline-none focus:border-[#FF6B2C] focus:shadow-[0_0_0_3px_rgba(255,107,44,0.10)]"
                   required
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-md flex items-center text-on-surface-variant hover:text-on-surface transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#444] hover:text-[#777] transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[20px]">
+                  <span className="material-symbols-outlined text-[18px]">
                     {showPassword ? 'visibility_off' : 'visibility'}
                   </span>
                 </button>
               </div>
             </div>
 
-            <div className="pt-sm space-y-md">
+            {/* Buttons */}
+            <div className="pt-1 space-y-3">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-custom-primary text-white font-label-caps text-label-caps py-md rounded hover:opacity-90 transition-opacity flex items-center justify-center space-x-sm"
+                id="login-submit-btn"
+                className="w-full bg-[#FF6B2C] hover:bg-[#e55a20] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-[13px] py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(255,107,44,0.28)] hover:shadow-[0_4px_28px_rgba(255,107,44,0.42)]"
               >
-                <span>{loading ? 'Authenticating...' : 'Login'}</span>
-                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                {loading ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Sign In</span>
+                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </>
+                )}
               </button>
-              
+
               <Link
                 to="/register"
-                className="w-full block text-center bg-custom-surface border border-custom-border text-on-surface font-label-caps text-label-caps py-md rounded hover:bg-[#1e1e1e] transition-colors"
+                className="w-full block text-center bg-transparent border border-[#222] hover:border-[#333] text-[#666] hover:text-[#999] font-medium text-[13px] py-3.5 rounded-xl transition-all duration-200"
               >
-                Create account
+                Don't have an account? <span className="text-[#FF6B2C]">Create one</span>
               </Link>
             </div>
           </form>
 
-          {/* Footer Area */}
-          <div className="px-lg py-md bg-[#0f0f0f] border-t border-custom-border text-center">
-            <p className="font-code-sm text-code-sm text-on-surface-variant">
-              System Status: <span className="text-[#4ade80]">Operational</span>
-            </p>
+          {/* Bottom strip */}
+          <div className="px-8 py-3.5 bg-[#0d0d0d] border-t border-[#191919] flex items-center justify-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B2C] animate-pulse" />
+            <span className="text-[11px] text-[#333] font-mono tracking-widest">LINKENGINE · SECURE</span>
           </div>
         </div>
       </main>
 
-      {/* Toast Alert */}
       <Toast
         show={showToast}
         message={toastMessage}

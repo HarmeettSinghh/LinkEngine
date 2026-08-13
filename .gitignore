@@ -36,6 +36,7 @@ nbdist/
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
 
 ##############################
 # Gradle
@@ -70,32 +71,34 @@ Thumbs.db
 Desktop.ini
 
 ##############################
-# Environment Variables
+# Environment Variables & Secrets
 ##############################
 
 .env
 .env.*
 !.env.example
 
-##############################
-# Spring Boot
-##############################
-
+# Spring Boot application secrets — use application.properties.example as template
+url-shortener-sb/src/main/resources/application.properties
 application-local.yml
 application-local.properties
 application-prod.yml
 application-prod.properties
 
 ##############################
-# React
+# React / Vite
 ##############################
 
 frontend/node_modules/
 frontend/build/
 frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
 
 ##############################
-# npm
+# npm / yarn / pnpm
 ##############################
 
 npm-debug.log*
@@ -118,9 +121,9 @@ coverage/
 *.swo
 
 ##############################
-# Mac/Linux
+# Mac / Linux
 ##############################
 
 .Trashes
 .AppleDouble
-.LSOverride
+.LSOverride
