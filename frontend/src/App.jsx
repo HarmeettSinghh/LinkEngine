@@ -39,7 +39,18 @@ const ProtectedRoute = ({ children }) => {
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      const decoded = decodeToken(savedToken);
+      if (decoded && decoded.exp * 1000 > Date.now()) {
+        return decoded;
+      } else {
+        localStorage.removeItem('token');
+      }
+    }
+    return null;
+  });
 
   useEffect(() => {
     if (token) {

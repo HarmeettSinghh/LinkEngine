@@ -32,13 +32,13 @@ export default function Layout({ children }) {
       <nav className="hidden md:flex flex-col h-screen fixed left-0 top-0 z-40 w-64 bg-paper border-r border-rule">
         {/* Brand Header */}
         <div className="p-lg border-b border-rule">
-          <div className="flex items-center gap-xs">
+          <Link to="/" className="flex items-center gap-xs hover:opacity-80 transition-opacity">
             <BrandLogo className="w-5 h-5" />
             <span className="font-display font-extrabold text-xl text-ink tracking-tight lowercase">
               linkengine
             </span>
             <span className="period" />
-          </div>
+          </Link>
 
           <button
             onClick={handleShortenClick}
@@ -118,13 +118,13 @@ export default function Layout({ children }) {
         }`}
       >
         <div className="p-lg border-b border-rule flex justify-between items-center bg-paper">
-          <div className="flex items-center gap-xs">
+          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-xs hover:opacity-80 transition-opacity">
             <BrandLogo className="w-5 h-5" />
             <span className="font-display font-extrabold text-lg text-ink lowercase tracking-tight">
               linkengine
             </span>
             <span className="period" />
-          </div>
+          </Link>
           <button
             onClick={() => setMobileMenuOpen(false)}
             className="p-xs text-muted hover:text-ink"
@@ -174,11 +174,11 @@ export default function Layout({ children }) {
       <div className="flex-1 flex flex-col md:pl-64 min-w-0">
         {/* Mobile Header */}
         <header className="md:hidden sticky top-0 z-30 bg-paper border-b border-rule px-lg py-sm flex justify-between items-center">
-          <div className="flex items-center gap-xs">
+          <Link to="/" className="flex items-center gap-xs hover:opacity-80 transition-opacity">
             <BrandLogo className="w-5 h-5" />
             <span className="font-display font-extrabold text-base text-ink lowercase">linkengine</span>
             <span className="period" />
-          </div>
+          </Link>
           <button
             onClick={() => setMobileMenuOpen(true)}
             className="p-xs border border-rule text-ink bg-paper-2"
