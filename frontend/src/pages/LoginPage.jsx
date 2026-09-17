@@ -45,8 +45,8 @@ export default function LoginPage() {
     try {
       const response = await api.login(email, password);
       setToastType('success');
-      setToastMessage('Authentication Succeeded');
-      setToastDesc('JWT token issued. Redirecting to workbench...');
+      setToastMessage('Signed in');
+      setToastDesc('Redirecting to your dashboard...');
       setShowToast(true);
 
       setTimeout(() => {
@@ -81,7 +81,7 @@ export default function LoginPage() {
               <span className="period" />
             </Link>
             <span className="font-label-caps text-[10px] uppercase tracking-widest text-muted font-mono">
-              SYS-AUTH // 01
+              Sign In
             </span>
           </div>
 
@@ -90,7 +90,7 @@ export default function LoginPage() {
               sign in<span className="period" />
             </h1>
             <p className="font-mono text-xs text-muted mb-lg">
-              Enter your credentials to access URL telemetry.
+              Sign in to manage your links.
             </p>
 
             {errorMsg && (
@@ -104,14 +104,14 @@ export default function LoginPage() {
               {/* Email */}
               <div>
                 <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1" htmlFor="email">
-                  Email Identifier
+                  Email
                 </label>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="operator@linkengine.io"
+                  placeholder="you@example.com"
                   className="input-base w-full px-md py-sm text-xs font-mono"
                   required
                   autoComplete="email"
@@ -160,7 +160,7 @@ export default function LoginPage() {
                   <span className="material-symbols-outlined text-[16px]">
                     {loading ? 'hourglass_empty' : 'login'}
                   </span>
-                  {loading ? 'Authenticating...' : 'Sign In'}
+                  {loading ? 'Signing in...' : 'Sign In'}
                 </button>
 
                 <Link
@@ -175,8 +175,8 @@ export default function LoginPage() {
 
           {/* Footer Strip */}
           <div className="p-sm border-t border-rule bg-paper-2 flex justify-between items-center text-[10px] font-mono text-muted">
-            <span>SECURE JWT PROTOCOL</span>
-            <span className="text-accent font-bold">READY</span>
+            <span>linkengine.io</span>
+            <span className="text-accent font-bold">SECURE</span>
           </div>
         </div>
       </main>

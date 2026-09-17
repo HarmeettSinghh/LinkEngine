@@ -191,14 +191,14 @@ export default function AnalyticsPage() {
       <header className="mb-xl pb-md border-b border-rule flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
         <div>
           <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
-            Telemetry // Time-Series Log
+            Analytics
           </div>
           <h1 className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight lowercase">
             analytics<span className="period" />
           </h1>
           {selectedShortUrl && (
             <p className="font-mono text-xs text-muted mt-1">
-              TARGET ALIAS: <strong className="text-accent">{BASE_URL}/{selectedShortUrl}</strong>
+              <strong className="text-accent">{BASE_URL}/{selectedShortUrl}</strong>
             </p>
           )}
         </div>
@@ -245,14 +245,14 @@ export default function AnalyticsPage() {
               {selectedShortUrl ? selectedLinkTotalClicks : 0}
             </p>
             <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
-              Registered: {selectedLinkCreatedDate}
+              Created on {selectedLinkCreatedDate}
             </p>
           </div>
 
           <div className="border-r border-b border-rule p-lg bg-paper">
             <div className="flex justify-between items-start mb-md">
               <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
-                Period Volume
+                Clicks this period
               </span>
               <span className="material-symbols-outlined text-muted text-base">date_range</span>
             </div>
@@ -285,18 +285,18 @@ export default function AnalyticsPage() {
       <section className="mb-xl border border-rule bg-paper">
         <div className="p-md border-b border-rule flex justify-between items-center bg-paper-2">
           <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
-            02. Redirection Frequency Graph
+            Clicks Over Time
           </h2>
-          <span className="text-[10px] text-muted font-mono">SAMPLING: DAILY</span>
+          <span className="text-[10px] text-muted font-mono">Daily</span>
         </div>
         <div className="p-lg h-80 w-full relative">
           {loading ? (
             <div className="absolute inset-0 flex items-center justify-center bg-paper/90 text-muted font-mono text-xs">
-              Streaming telemetry points...
+              Loading stats...
             </div>
           ) : !selectedShortUrl ? (
             <div className="absolute inset-0 flex items-center justify-center text-muted font-mono text-xs">
-              Select an active short URL to visualize data.
+              Choose a link to see its stats.
             </div>
           ) : (
             <Line data={chartData} options={chartOptions} />
@@ -308,16 +308,16 @@ export default function AnalyticsPage() {
       <section className="border border-rule bg-paper">
         <div className="p-md border-b border-rule bg-paper-2">
           <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
-            03. Registry Traffic Breakdown
+            Traffic Breakdown
           </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse font-mono text-xs">
             <thead>
               <tr className="border-b border-rule text-muted font-label-caps text-[11px] uppercase tracking-wider">
-                <th className="p-md font-semibold">Short Code</th>
-                <th className="p-md font-semibold">Target Destination</th>
-                <th className="p-md font-semibold text-right">Total Hits</th>
+                <th className="p-md font-semibold">Short Link</th>
+                <th className="p-md font-semibold">Original URL</th>
+                <th className="p-md font-semibold text-right">Total Clicks</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-rule">

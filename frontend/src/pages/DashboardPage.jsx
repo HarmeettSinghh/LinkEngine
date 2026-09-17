@@ -54,8 +54,8 @@ export default function DashboardPage() {
       const newLink = await api.shortenUrl(longUrl);
       setLastShortened(newLink);
       setToastType('success');
-      setToastMessage('URL Shortened');
-      setToastDesc(`Short code: ${newLink.shortURl}`);
+      setToastMessage('Short link created!');
+      setToastDesc(`Your short link: ${newLink.shortURl}`);
       setShowToast(true);
       setLongUrl('');
       fetchLinks();
@@ -99,14 +99,14 @@ export default function DashboardPage() {
         <div>
           <div className="flex items-center gap-xs font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
             <span className="w-2 h-2 bg-accent inline-block" />
-            <span>Workbench // User: {user?.username || user?.sub || 'user'}</span>
+            <span>Welcome, {user?.username || user?.sub || 'there'}</span>
           </div>
           <h1 className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight lowercase">
             dashboard<span className="period" />
           </h1>
         </div>
         <div className="font-mono text-xs text-muted">
-          INDEX PROTOCOL // LIVE
+          {/* intentionally blank */}
         </div>
       </header>
 
@@ -114,9 +114,9 @@ export default function DashboardPage() {
       <section className="mb-xl border border-rule bg-paper p-lg">
         <div className="flex justify-between items-center pb-sm border-b border-rule mb-md">
           <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
-            01. Generate Short URL Alias
+            Create a short link
           </h2>
-          <span className="text-[10px] text-muted font-mono">B-TREE INDEX READY</span>
+          <span className="text-[10px] text-muted font-mono"></span>
         </div>
 
         <form onSubmit={handleShortenSubmit} className="flex flex-col md:flex-row gap-sm">
@@ -148,13 +148,13 @@ export default function DashboardPage() {
           <div className="mt-md p-md bg-paper-2 border border-ink flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
             <div className="min-w-0 flex-1">
               <span className="font-label-caps text-[10px] text-accent uppercase tracking-wider font-bold block mb-0.5">
-                Alias Generated Successfully
+                Short link created!
               </span>
               <span className="font-mono text-sm md:text-base font-bold text-ink truncate block">
                 {BASE_URL}/{lastShortened.shortURl}
               </span>
               <span className="font-mono text-xs text-muted truncate block mt-0.5">
-                Target: {lastShortened.orignalUrl}
+                Original URL: {lastShortened.orignalUrl}
               </span>
             </div>
             <div className="flex items-center gap-xs w-full md:w-auto">
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                 rel="noreferrer"
                 className="btn-secondary px-md py-xs text-xs font-semibold uppercase tracking-wider flex-1 md:flex-initial text-center"
               >
-                Test 302
+                Open link
               </a>
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function DashboardPage() {
       {/* ── Ruled Metric Cells: High-Contrast Swiss Architecture ───────── */}
       <section className="mb-xl">
         <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-sm">
-          02. Key Telemetry
+          Overview
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-rule">
           
@@ -200,7 +200,7 @@ export default function DashboardPage() {
                 {totalClicks}
               </p>
               <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
-                Aggregate Click Telemetry
+                Total clicks
               </p>
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                 {totalLinks}
               </p>
               <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
-                Active B-Tree Records
+                Links created
               </p>
             </div>
           </div>
@@ -236,7 +236,7 @@ export default function DashboardPage() {
                 {avgClicks}
               </p>
               <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
-                Performance Ratio
+                Avg. clicks per link
               </p>
             </div>
           </div>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
         <div className="p-md border-b border-rule flex justify-between items-center bg-paper-2">
           <div className="flex items-center gap-xs">
             <span className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
-              03. Recent Link Index
+              Recent Links
             </span>
           </div>
           <Link
@@ -264,9 +264,9 @@ export default function DashboardPage() {
           <table className="w-full text-left border-collapse font-mono text-xs">
             <thead>
               <tr className="border-b border-rule bg-paper text-muted font-label-caps text-[11px] uppercase tracking-wider">
-                <th className="p-md font-semibold">Short Code</th>
-                <th className="p-md font-semibold">Original Target URL</th>
-                <th className="p-md font-semibold">Registered</th>
+                <th className="p-md font-semibold">Short Link</th>
+                <th className="p-md font-semibold">Original URL</th>
+                <th className="p-md font-semibold">Created</th>
                 <th className="p-md font-semibold text-right">Clicks</th>
                 <th className="p-md font-semibold text-center">Actions</th>
               </tr>
@@ -275,13 +275,13 @@ export default function DashboardPage() {
               {loading ? (
                 <tr>
                   <td colSpan="5" className="p-lg text-center text-muted font-body">
-                    Querying link registry...
+                    Loading your links...
                   </td>
                 </tr>
               ) : recentLinks.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="p-lg text-center text-muted font-body">
-                    No active URLs found. Generate your first alias above.
+                    You haven't created any links yet. Create your first one above.
                   </td>
                 </tr>
               ) : (

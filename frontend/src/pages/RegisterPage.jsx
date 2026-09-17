@@ -41,8 +41,8 @@ export default function RegisterPage() {
     try {
       await api.register(username, email, password);
       setToastType('success');
-      setToastMessage('Account Registered');
-      setToastDesc('Redirecting to authentication portal...');
+      setToastMessage('Account Created');
+      setToastDesc('Taking you to sign in...');
       setShowToast(true);
 
       setTimeout(() => { navigate('/login'); }, 1200);
@@ -73,7 +73,7 @@ export default function RegisterPage() {
               <span className="period" />
             </Link>
             <span className="font-label-caps text-[10px] uppercase tracking-widest text-muted font-mono">
-              SYS-REG // 02
+              Create Account
             </span>
           </div>
 
@@ -82,7 +82,7 @@ export default function RegisterPage() {
               create account<span className="period" />
             </h1>
             <p className="font-mono text-xs text-muted mb-lg">
-              Initialize a dedicated URL partition on this instance.
+              Create your account to start shortening links.
             </p>
 
             {errorMsg && (
@@ -96,7 +96,7 @@ export default function RegisterPage() {
               {/* Username */}
               <div>
                 <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1" htmlFor="username">
-                  Username Handle
+                  Username
                 </label>
                 <input
                   id="username"
@@ -119,7 +119,7 @@ export default function RegisterPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="operator@linkengine.io"
+                  placeholder="you@example.com"
                   className="input-base w-full px-md py-sm text-xs font-mono"
                   required
                   autoComplete="email"
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                   <span className="material-symbols-outlined text-[16px]">
                     {loading ? 'hourglass_empty' : 'how_to_reg'}
                   </span>
-                  {loading ? 'Registering...' : 'Register Operator Account'}
+                  {loading ? 'Creating account...' : 'Create Account'}
                 </button>
 
                 <Link
@@ -209,8 +209,8 @@ export default function RegisterPage() {
 
           {/* Footer Strip */}
           <div className="p-sm border-t border-rule bg-paper-2 flex justify-between items-center text-[10px] font-mono text-muted">
-            <span>ISOLATED TENANT REGISTRATION</span>
-            <span className="text-accent font-bold">SHA-256</span>
+            <span>linkengine.io</span>
+            <span className="text-accent font-bold">SECURE</span>
           </div>
         </div>
       </main>

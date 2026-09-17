@@ -10,7 +10,7 @@ export default function SettingsPage() {
       {/* ── Page Header: Hallmark Grid Lowercase Display ────────────────── */}
       <header className="mb-xl pb-md border-b border-rule">
         <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
-          Configuration // Identity
+          Settings
         </div>
         <h1 className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight lowercase">
           settings<span className="period" />
@@ -25,7 +25,7 @@ export default function SettingsPage() {
             <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
               01. User Account Profile
             </h2>
-            <span className="text-[10px] text-muted font-mono">AUTH // JWT</span>
+            <span className="text-[10px] text-muted font-mono"></span>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-lg">
@@ -38,7 +38,7 @@ export default function SettingsPage() {
             <div className="flex-1 flex flex-col gap-md">
               <div>
                 <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1">
-                  Username Identifier
+                  Username
                 </label>
                 <div className="font-mono text-xs text-ink p-sm bg-paper-2 border border-rule">
                   {user?.username || user?.sub || 'user'}
@@ -54,14 +54,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1">
-                  Assigned Roles
-                </label>
-                <div className="font-mono text-xs text-muted p-sm bg-paper-2 border border-rule">
-                  {user?.roles || 'ROLE_USER'}
-                </div>
-              </div>
+
             </div>
           </div>
         </section>
@@ -70,7 +63,7 @@ export default function SettingsPage() {
         <section className="border border-rule bg-paper p-lg">
           <div className="border-b border-rule pb-sm mb-lg">
             <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
-              02. Design Architecture
+              02. Theme
             </h2>
           </div>
 
@@ -80,7 +73,7 @@ export default function SettingsPage() {
               <div>
                 <p className="font-bold text-sm text-ink font-mono">Hallmark Grid Theme</p>
                 <p className="text-xs text-muted font-mono mt-0.5">
-                  Swiss neo-grotesque systems design · 12-column exposed grid · Archivo
+                  Hallmark Grid — Default theme
                 </p>
               </div>
             </div>

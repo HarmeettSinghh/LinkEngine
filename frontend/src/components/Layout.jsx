@@ -88,7 +88,7 @@ export default function Layout({ children }) {
                 {user?.sub || user?.username || 'user'}
               </p>
               <p className="text-[10px] text-muted uppercase tracking-wider truncate">
-                {user?.roles || 'ROLE_USER'}
+                Member
               </p>
             </div>
           </div>

@@ -86,7 +86,7 @@ export default function MyLinksPage() {
       <header className="mb-xl pb-md border-b border-rule flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
         <div>
           <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
-            Directory // Archive
+            My Links
           </div>
           <h1 className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight lowercase">
             my links<span className="period" />
@@ -118,7 +118,7 @@ export default function MyLinksPage() {
         <div className="border-r border-b border-rule p-lg bg-paper">
           <div className="flex justify-between items-start mb-md">
             <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
-              Total Recorded Clicks
+              Total Clicks
             </span>
             <span className="w-2 h-2 bg-accent inline-block" />
           </div>
@@ -126,14 +126,14 @@ export default function MyLinksPage() {
             {totalClicks}
           </p>
           <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
-            Aggregated Redirection Hits
+            All time
           </p>
         </div>
 
         <div className="border-r border-b border-rule p-lg bg-paper">
           <div className="flex justify-between items-start mb-md">
             <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
-              Active Records
+              Total Links
             </span>
             <span className="material-symbols-outlined text-muted text-base">link</span>
           </div>
@@ -141,7 +141,7 @@ export default function MyLinksPage() {
             {links.length}
           </p>
           <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
-            Persisted B-Tree Entries
+            Links created
           </p>
         </div>
       </div>
@@ -152,8 +152,8 @@ export default function MyLinksPage() {
           <table className="w-full text-left border-collapse font-mono text-xs">
             <thead>
               <tr className="border-b border-rule bg-paper-2 text-muted font-label-caps text-[11px] uppercase tracking-wider">
-                <th className="py-sm px-md font-semibold w-1/4">Short Alias</th>
-                <th className="py-sm px-md font-semibold w-5/12">Original Destination</th>
+                <th className="py-sm px-md font-semibold w-1/4">Short Link</th>
+                <th className="py-sm px-md font-semibold w-5/12">Original URL</th>
                 <th className="py-sm px-md font-semibold text-right w-1/12">Clicks</th>
                 <th className="py-sm px-md font-semibold w-1/6">Created</th>
                 <th className="py-sm px-md font-semibold text-center w-1/12">Actions</th>
@@ -163,7 +163,7 @@ export default function MyLinksPage() {
               {loading ? (
                 <tr>
                   <td colSpan="5" className="py-xl text-center text-muted font-body">
-                    Loading registry items...
+                    Loading your links...
                   </td>
                 </tr>
               ) : currentItems.length === 0 ? (
@@ -280,15 +280,15 @@ export default function MyLinksPage() {
               disabled={currentPage === 1}
               className="btn-secondary px-sm py-xs text-xs disabled:opacity-40"
             >
-              PREV
+              Previous
             </button>
-            <span className="px-xs text-ink font-bold">{currentPage} / {totalPages}</span>
+            <span className="px-xs text-ink font-bold">Page {currentPage} of {totalPages}</span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
               className="btn-secondary px-sm py-xs text-xs disabled:opacity-40"
             >
-              NEXT
+              Next
             </button>
           </div>
         </div>

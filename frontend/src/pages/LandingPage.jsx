@@ -5,10 +5,7 @@ import BrandLogo from '../components/BrandLogo';
 import Navbar from '../components/Navbar';
 import '../landing.css';
 
-/* Hallmark · theme: Grid · genre: editorial
- * Swiss neo-grotesque systems design · 12-column exposed grid · Archivo typography
- * pre-emit critique: P5 H5 E5 S5 R5 V5
- */
+/* Hallmark · theme: Grid · genre: editorial */
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -46,8 +43,8 @@ export default function LandingPage() {
               </h1>
 
               <p className="font-body text-base md:text-lg text-ink/80 max-w-xl mb-xl leading-relaxed">
-                A high-performance URL redirection service engineered with Spring Boot and indexed MySQL.
-                Transform unwieldy web addresses into instant aliases, and capture granular telemetry on every click.
+                A fast, reliable link shortener with built-in analytics.
+                Turn long URLs into clean short links and track every click in real time.
               </p>
 
               <div className="flex flex-wrap items-center gap-sm mb-lg">
@@ -70,16 +67,16 @@ export default function LandingPage() {
               {/* Stack Spec Marks */}
               <div className="flex flex-wrap items-center gap-md pt-md border-t border-rule text-xs font-label-caps uppercase tracking-wider text-muted">
                 <span className="flex items-center gap-xs">
-                  <span className="w-1.5 h-1.5 bg-accent inline-block" /> Spring Boot
+                  <span className="w-1.5 h-1.5 bg-accent inline-block" /> Fast redirects
                 </span>
                 <span className="flex items-center gap-xs">
-                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> MySQL Indexed
+                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> Click analytics
                 </span>
                 <span className="flex items-center gap-xs">
-                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> JWT Auth
+                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> Secure accounts
                 </span>
                 <span className="flex items-center gap-xs">
-                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> Open Source
+                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> Open source
                 </span>
               </div>
             </div>
@@ -117,11 +114,11 @@ export default function LandingPage() {
                 {/* Protocol Step 2 */}
                 <div className="p-sm bg-paper border border-rule">
                   <div className="text-[10px] text-muted uppercase tracking-wider font-label-caps mb-1">
-                    02. B-Tree Index Resolution
+                    02. Short link generated
                   </div>
                   <div className="flex justify-between items-center text-ink">
-                    <span>hash_key: <strong className="text-accent">xK9mP2</strong></span>
-                    <span className="text-muted text-[10px]">O(log N)</span>
+                    <span>lnk.io/<strong className="text-accent">xK9mP2</strong></span>
+                    <span className="text-muted text-[10px]">ready</span>
                   </div>
                 </div>
 
@@ -134,7 +131,7 @@ export default function LandingPage() {
                 <div className="p-sm bg-paper border border-accent">
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] text-accent uppercase tracking-wider font-label-caps font-bold">
-                      03. HTTP 302 Found
+                      03. Instant redirect
                     </span>
                     <span className="w-2 h-2 bg-accent inline-block" />
                   </div>
@@ -152,14 +149,14 @@ export default function LandingPage() {
         <section className="plate my-xl p-lg md:p-2xl">
           <div className="relative z-10 max-w-4xl">
             <div className="font-label-caps text-xs uppercase tracking-widest font-bold text-paper/80 mb-sm">
-              Core Architectural Differentiator // Plate 01
+              Why LinkEngine
             </div>
             <h2 className="font-display font-extrabold text-[clamp(32px,5.5vw,72px)] tracking-[-0.04em] leading-[0.92] lowercase mb-md text-paper">
               zero sequential scans.<br />
               direct indexed dispatch<span className="inline-block w-3 h-3 bg-paper ml-1 align-baseline" />
             </h2>
             <p className="text-paper/90 font-body text-base max-w-2xl leading-relaxed">
-              Every short code is indexed directly in MySQL. Redirect lookups do not traverse table rows — the database engine jumps straight to the target record for instantaneous response times.
+              Your links redirect instantly, no matter how many you create.
             </p>
           </div>
         </section>
@@ -189,10 +186,10 @@ export default function LandingPage() {
                   <span className="material-symbols-outlined text-accent text-xl">bolt</span>
                 </div>
                 <h3 className="font-display font-extrabold text-lg text-ink lowercase tracking-tight mb-xs">
-                  mysql index lookup
+                  instant redirects
                 </h3>
                 <p className="text-xs text-ink/70 leading-relaxed">
-                  Fast B-Tree index lookup on the short code column ensures instant redirection with minimal database overhead.
+                  Every short link redirects instantly. Clean, fast, and reliable every time.
                 </p>
               </div>
               <div className="pt-md mt-md border-t border-rule/60 text-[11px] font-label-caps uppercase tracking-wider text-muted">
@@ -227,14 +224,14 @@ export default function LandingPage() {
                   <span className="material-symbols-outlined text-accent text-xl">lock</span>
                 </div>
                 <h3 className="font-display font-extrabold text-lg text-ink lowercase tracking-tight mb-xs">
-                  jwt isolation
+                  secure accounts
                 </h3>
                 <p className="text-xs text-ink/70 leading-relaxed">
-                  Stateless JWT authentication backed by Spring Security. URLs are strictly scoped to authenticated user accounts.
+                  Your links are private and only visible to you.
                 </p>
               </div>
               <div className="pt-md mt-md border-t border-rule/60 text-[11px] font-label-caps uppercase tracking-wider text-muted">
-                Spring Security 6
+                Private &amp; secure
               </div>
             </article>
 
@@ -249,7 +246,7 @@ export default function LandingPage() {
                   self-hostable
                 </h3>
                 <p className="text-xs text-ink/70 leading-relaxed">
-                  Deploy the Spring Boot service anywhere Java and MySQL run. Complete ownership of your data with no third-party lock-in.
+                  Run it yourself or use the hosted version. Your data stays yours.
                 </p>
               </div>
               <div className="pt-md mt-md border-t border-rule/60 text-[11px] font-label-caps uppercase tracking-wider text-muted">
@@ -264,10 +261,10 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md px-lg">
             <div>
               <h2 className="font-display font-extrabold text-2xl md:text-3xl text-ink tracking-tight lowercase mb-1">
-                ready to deploy<span className="period" />
+                ready to get started<span className="period" />
               </h2>
               <p className="text-sm text-muted">
-                Create an account or connect to your local LinkEngine instance.
+                Create a free account to start shortening links.
               </p>
             </div>
             <div className="flex items-center gap-sm">
