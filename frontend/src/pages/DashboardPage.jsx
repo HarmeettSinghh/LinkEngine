@@ -59,6 +59,17 @@ export default function DashboardPage() {
       setShowToast(true);
       setLongUrl('');
       fetchLinks();
+
+      // Apply preferences
+      const fullShortUrl = `${BASE_URL}/${newLink.shortURl}`;
+      if (localStorage.getItem('pref_autoCopy') !== 'false') {
+        navigator.clipboard.writeText(fullShortUrl).catch(() => {});
+        setCopiedLink(newLink.shortURl);
+        setTimeout(() => setCopiedLink(''), 2000);
+      }
+      if (localStorage.getItem('pref_openAfterShorten') === 'true') {
+        window.open(fullShortUrl, '_blank', 'noreferrer');
+      }
     } catch (err) {
       setToastType('error');
       setToastMessage('Shortening Failed');

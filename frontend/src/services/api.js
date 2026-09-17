@@ -82,4 +82,17 @@ export const api = {
     }
     return response.json(); // returns List<ClickEventDTO>
   },
+
+  changePassword: async (currentPassword, newPassword) => {
+    const response = await fetch(`${BASE_URL}/api/auth/change-password`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    const text = await response.text();
+    if (!response.ok) {
+      throw new Error(text || 'Failed to change password');
+    }
+    return text;
+  },
 };

@@ -7,6 +7,7 @@ import com.url.shortner.security.jwt.JwtAuthenticationResponse;
 import com.url.shortner.security.jwt.JwtUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,5 +51,14 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(
                 ()->new UsernameNotFoundException("User not found with email: " + email)
         );
+    }
+
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        User user = findByEmail(email);
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new BadCredentialsException("Current password is incorrect.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

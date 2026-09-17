@@ -102,7 +102,8 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/public/**").permitAll()
+                        .requestMatchers("/api/auth/change-password").authenticated()
                         .requestMatchers("/{shortUrl}").permitAll()
                         .requestMatchers("/api/urls/**").authenticated()
                         .anyRequest().permitAll()
