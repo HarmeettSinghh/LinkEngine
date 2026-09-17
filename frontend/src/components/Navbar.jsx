@@ -10,86 +10,56 @@ export default function Navbar() {
   const isLinkActive = (path) => location.pathname === path;
 
   return (
-    <nav className="bg-base border-b border-border-subtle w-full px-lg py-md sticky top-0 z-50 backdrop-blur-md bg-[#0B0B0B]/90">
+    <nav className="border-b border-rule w-full px-lg py-sm sticky top-0 z-50 bg-paper">
       <div className="max-w-container-max mx-auto flex justify-between items-center w-full">
-        {/* Brand Logo and Name */}
+        {/* Brand: Lowercase Swiss Display + Period Mark */}
         <div className="flex items-center gap-md">
-          <Link to="/" className="flex items-center gap-sm">
-            <BrandLogo className="w-8 h-8" />
-            <span className="font-headline-md text-headline-md font-bold text-white tracking-tight">
-              LinkEngine
+          <Link to="/" className="flex items-center gap-xs">
+            <BrandLogo className="w-5 h-5" />
+            <span className="font-display font-extrabold text-xl text-ink tracking-tight lowercase">
+              linkengine
             </span>
+            <span className="period" />
           </Link>
         </div>
 
-        {/* Dynamic Navigation Links based on Auth Status */}
-        <div className="hidden md:flex items-center gap-lg">
-          <Link
-            to="/"
-            className={`font-label-caps text-label-caps transition-colors ${
-              isLinkActive('/') ? 'text-[#FF6B2C]' : 'text-on-surface-variant hover:text-[#FF6B2C]'
-            }`}
-          >
-            Home
-          </Link>
-          
-          {!isAuthenticated ? (
-            <a
-              href="#about"
-              className="font-label-caps text-label-caps text-on-surface-variant hover:text-[#FF6B2C] transition-colors"
+        {/* Public nav links — only show when not authenticated */}
+        {!isAuthenticated && (
+          <div className="hidden md:flex items-center gap-lg">
+            <Link
+              to="/"
+              className={`font-label-caps text-label-caps tracking-widest uppercase font-semibold transition-colors ${
+                isLinkActive('/') ? 'text-accent' : 'text-muted hover:text-ink'
+              }`}
             >
-              About
+              Home
+            </Link>
+            <a
+              href="#features"
+              className="font-label-caps text-label-caps tracking-widest uppercase font-semibold text-muted hover:text-ink transition-colors"
+            >
+              Features
             </a>
-          ) : (
-            <>
-              <Link
-                to="/dashboard"
-                className={`font-label-caps text-label-caps transition-colors ${
-                  isLinkActive('/dashboard') ? 'text-[#FF6B2C]' : 'text-on-surface-variant hover:text-[#FF6B2C]'
-                }`}
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/my-links"
-                className={`font-label-caps text-label-caps transition-colors ${
-                  isLinkActive('/my-links') ? 'text-[#FF6B2C]' : 'text-on-surface-variant hover:text-[#FF6B2C]'
-                }`}
-              >
-                My Links
-              </Link>
-              <Link
-                to="/analytics"
-                className={`font-label-caps text-label-caps transition-colors ${
-                  isLinkActive('/analytics') ? 'text-[#FF6B2C]' : 'text-on-surface-variant hover:text-[#FF6B2C]'
-                }`}
-              >
-                Analytics
-              </Link>
-              <Link
-                to="/settings"
-                className={`font-label-caps text-label-caps transition-colors ${
-                  isLinkActive('/settings') ? 'text-[#FF6B2C]' : 'text-on-surface-variant hover:text-[#FF6B2C]'
-                }`}
-              >
-                Settings
-              </Link>
-            </>
-          )}
-        </div>
+            <a
+              href="#architecture"
+              className="font-label-caps text-label-caps tracking-widest uppercase font-semibold text-muted hover:text-ink transition-colors"
+            >
+              Specs
+            </a>
+          </div>
+        )}
 
-        {/* User CTA Action Buttons */}
-        <div className="flex items-center gap-md">
+        {/* CTA buttons — Swiss 0-radius */}
+        <div className="flex items-center gap-sm">
           {isAuthenticated ? (
-            <div className="flex items-center gap-md">
-              {/* User Profile display */}
-              <div className="flex items-center gap-xs px-sm py-xs bg-surface-level-2 border border-border-subtle rounded font-code-sm text-code-sm text-on-surface-variant">
-                <span className="material-symbols-outlined text-sm">person</span>
+            <div className="flex items-center gap-sm">
+              <div className="flex items-center gap-xs px-sm py-xs border border-rule font-code-sm text-code-sm text-ink bg-paper-2">
+                <span className="material-symbols-outlined text-sm text-muted">person</span>
                 <span>{user?.sub || user?.username || 'user'}</span>
               </div>
               <button
                 onClick={logout}
-                className="btn-secondary px-md py-sm rounded text-body-sm font-label-caps transition-colors"
+                className="btn-secondary px-md py-xs text-xs font-semibold uppercase tracking-wider transition-colors"
               >
                 Logout
               </button>
@@ -98,13 +68,13 @@ export default function Navbar() {
             <>
               <Link
                 to="/login"
-                className="btn-secondary px-md py-sm rounded text-body-sm font-label-caps transition-colors hidden md:block"
+                className="btn-secondary px-md py-xs text-xs font-semibold uppercase tracking-wider transition-colors hidden md:inline-block"
               >
                 Login
               </Link>
               <Link
                 to="/register"
-                className="btn-primary px-md py-sm rounded text-body-sm font-label-caps transition-colors"
+                className="btn-primary px-md py-xs text-xs font-semibold uppercase tracking-wider transition-colors"
               >
                 Get Started
               </Link>

@@ -1,22 +1,30 @@
 # ============================================================
 # LinkEngine — Spring Boot Configuration Template
-# Copy this file to application.properties and fill in values
-# NEVER commit application.properties (it is gitignored)
+# Copy this file to application.properties for local development
+# In Production (e.g. Render), set these as Environment Variables
 # ============================================================
 
 spring.application.name=url-shortener-sb
 
-# ── Database ────────────────────────────────────────────────
-spring.datasource.url=jdbc:mysql://localhost:3306/linkengine
-spring.datasource.username=YOUR_DB_USERNAME
-spring.datasource.password=YOUR_DB_PASSWORD
+# ── Server Port (Render sets $PORT dynamically) ─────────────
+server.port=${PORT:8080}
 
-# ── JPA ─────────────────────────────────────────────────────
+# ── Database (Aiven PostgreSQL) ─────────────────────────────
+# JDBC URL format with SSL required:
+spring.datasource.url=${DB_URL:jdbc:postgresql://pg-14790c19-harmeettsinghh28-f7a7.j.aivencloud.com:23647/defaultdb?sslmode=require}
+spring.datasource.username=${DB_USERNAME:avnadmin}
+spring.datasource.password=${DB_PASSWORD:YOUR_AIVEN_DB_PASSWORD}
+
+# ── JPA / Hibernate ─────────────────────────────────────────
 spring.jpa.hibernate.ddl-auto=update
 #spring.jpa.show-sql=true
 
 # ── JWT ─────────────────────────────────────────────────────
 # Generate a secure Base64-encoded secret (min 256-bit / 32 bytes)
 # Example: openssl rand -base64 32
-jwt.secret=YOUR_BASE64_JWT_SECRET_HERE
-jwt.expiration=172800000
+jwt.secret=${JWT_SECRET:YOUR_BASE64_JWT_SECRET_HERE}
+jwt.expiration=${JWT_EXPIRATION:172800000}
+
+# ── CORS (Allowed Origins) ──────────────────────────────────
+# Comma-separated list of allowed frontend origins (e.g. http://localhost:5173,https://your-app.vercel.app)
+frontend.url=${FRONTEND_URL:http://localhost:5173}

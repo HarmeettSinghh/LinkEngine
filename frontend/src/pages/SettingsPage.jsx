@@ -7,82 +7,88 @@ export default function SettingsPage() {
 
   return (
     <Layout>
-      <header className="mb-xl">
-        <h2 className="font-display-lg text-display-lg text-on-surface mb-sm">Settings</h2>
-        <p className="font-body-lg text-body-lg text-on-surface-variant">
-          View your account profile.
-        </p>
+      {/* ── Page Header: Hallmark Grid Lowercase Display ────────────────── */}
+      <header className="mb-xl pb-md border-b border-rule">
+        <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
+          Configuration // Identity
+        </div>
+        <h1 className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight lowercase">
+          settings<span className="period" />
+        </h1>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
-        {/* Left Column: Navigation Tabs */}
-        <div className="lg:col-span-1 hidden lg:block">
-          <div className="flex flex-col gap-sm sticky top-lg">
-            <button className="text-left px-md py-sm rounded text-primary font-label-caps text-label-caps bg-surface-container-high border-l-2 border-[#FF6B2C]">
-              General
-            </button>
+      {/* ── Ruled Settings Matrix ────────────────────────────────────────── */}
+      <div className="max-w-2xl space-y-xl">
+        {/* Profile Specification */}
+        <section className="border border-rule bg-paper p-lg">
+          <div className="border-b border-rule pb-sm mb-lg flex justify-between items-center">
+            <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
+              01. User Account Profile
+            </h2>
+            <span className="text-[10px] text-muted font-mono">AUTH // JWT</span>
           </div>
-        </div>
 
-        {/* Right Column: Settings Content */}
-        <div className="lg:col-span-2 flex flex-col gap-xl">
-          {/* Profile Section */}
-          <section className="card-surface rounded-lg p-lg bg-level-1">
-            <div className="border-b border-[#292929] pb-sm mb-lg flex justify-between items-end">
-              <h3 className="font-headline-md text-headline-md text-on-surface">Profile Information</h3>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-lg mb-lg">
-              <div className="flex-shrink-0">
-                <div className="w-24 h-24 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center overflow-hidden">
-                  <span className="material-symbols-outlined text-4xl text-on-surface-variant">person</span>
-                </div>
-              </div>
-              <div className="flex-1 flex flex-col gap-md justify-center">
-                <div className="flex flex-col gap-xs">
-                  <label className="font-label-caps text-label-caps text-on-surface-variant">Username</label>
-                  <p className="font-code-md text-code-md text-on-surface p-sm bg-surface-container-low rounded w-full md:w-2/3">
-                    {user?.username || user?.sub || 'user'}
-                  </p>
-                </div>
-                <div className="flex flex-col gap-xs">
-                  <label className="font-label-caps text-label-caps text-on-surface-variant">Email Address</label>
-                  <p className="font-code-md text-code-md text-on-surface p-sm bg-surface-container-low rounded w-full md:w-2/3">
-                    {user?.email || user?.sub || 'user@example.com'}
-                  </p>
-                </div>
-                <div className="flex flex-col gap-xs mt-sm">
-                   <p className="font-code-sm text-code-sm text-on-surface-variant">
-                     Note: Profile editing is currently not supported in this version.
-                   </p>
-                </div>
+          <div className="flex flex-col sm:flex-row gap-lg">
+            <div className="flex-shrink-0">
+              <div className="w-16 h-16 border border-rule bg-paper-2 flex items-center justify-center">
+                <span className="material-symbols-outlined text-3xl text-muted">person</span>
               </div>
             </div>
-          </section>
 
-          {/* Appearance Section */}
-          <section className="card-surface rounded-lg p-lg bg-level-1">
-            <div className="border-b border-[#292929] pb-sm mb-lg">
-              <h3 className="font-headline-md text-headline-md text-on-surface">Appearance</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-md">
-              <label className="cursor-pointer group">
-                <div className="border-2 border-primary bg-[#151515] rounded p-sm h-32 flex flex-col justify-between relative overflow-hidden">
-                  <div className="h-4 bg-[#292929] w-1/2 rounded mb-sm"></div>
-                  <div className="space-y-2">
-                    <div className="h-2 bg-[#292929] w-full rounded"></div>
-                    <div className="h-2 bg-[#292929] w-3/4 rounded"></div>
-                  </div>
-                  <div className="absolute top-sm right-sm bg-primary-container w-4 h-4 rounded-full flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[10px] text-white">check</span>
-                  </div>
+            <div className="flex-1 flex flex-col gap-md">
+              <div>
+                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1">
+                  Username Identifier
+                </label>
+                <div className="font-mono text-xs text-ink p-sm bg-paper-2 border border-rule">
+                  {user?.username || user?.sub || 'user'}
                 </div>
-                <div className="mt-sm text-center font-label-caps text-label-caps text-primary">
-                  Dark (System)
+              </div>
+
+              <div>
+                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1">
+                  Email Address
+                </label>
+                <div className="font-mono text-xs text-ink p-sm bg-paper-2 border border-rule">
+                  {user?.email || user?.sub || 'user@example.com'}
                 </div>
-              </label>
+              </div>
+
+              <div>
+                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1">
+                  Assigned Roles
+                </label>
+                <div className="font-mono text-xs text-muted p-sm bg-paper-2 border border-rule">
+                  {user?.roles || 'ROLE_USER'}
+                </div>
+              </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
+
+        {/* Theme Specification */}
+        <section className="border border-rule bg-paper p-lg">
+          <div className="border-b border-rule pb-sm mb-lg">
+            <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
+              02. Design Architecture
+            </h2>
+          </div>
+
+          <div className="flex items-center justify-between p-md bg-paper-2 border border-rule">
+            <div className="flex items-center gap-md">
+              <span className="w-3 h-3 bg-accent inline-block" />
+              <div>
+                <p className="font-bold text-sm text-ink font-mono">Hallmark Grid Theme</p>
+                <p className="text-xs text-muted font-mono mt-0.5">
+                  Swiss neo-grotesque systems design · 12-column exposed grid · Archivo
+                </p>
+              </div>
+            </div>
+            <span className="px-sm py-xs bg-paper border border-accent text-accent font-bold text-[10px] uppercase font-mono">
+              Active
+            </span>
+          </div>
+        </section>
       </div>
     </Layout>
   );

@@ -1,0 +1,101 @@
+/* Hallmark · macrostructure: Bento Grid · genre: editorial
+ * theme: Grid · paper: oklch(99% 0.003 255) · accent: oklch(55% 0.21 28)
+ * display: Archivo 800 lowercase · body: Archivo 400 · label: Archivo 600 uppercase
+ * axes: light / grotesk-heavy / warm (signal red ~28°) · pre-emit critique: P5 H5 E5 S5 R5 V5
+ */
+
+:root {
+  /* ── Ground & Paper (light, cool near-white) ─────────────────────────── */
+  --color-paper:         oklch(99% 0.003 255);    /* #fbfbfd - cool near-white ground */
+  --color-paper-2:       oklch(97.2% 0.003 255);  /* #f4f5f8 - stepped surface 2      */
+  --color-paper-3:       oklch(94.5% 0.005 255);  /* #eceef2 - stepped surface 3      */
+
+  /* Aliases for semantic interoperability */
+  --color-base:          var(--color-paper);
+  --color-surface-1:     var(--color-paper);
+  --color-surface-2:     var(--color-paper-2);
+  --color-surface-3:     var(--color-paper-3);
+  --color-surface-4:     oklch(92% 0.005 255);
+
+  /* ── Ink & Typography ─────────────────────────────────────────────────── */
+  --color-ink:           oklch(16% 0.010 255);    /* #16171d - cool near-black ink    */
+  --color-ink-dim:       oklch(16% 0.010 255 / 0.08); /* 8% ink watermark numeral   */
+  --color-text:          var(--color-ink);
+  --color-text-2:        oklch(35% 0.010 255);
+  --color-muted:         oklch(50% 0.010 255);    /* labels, captions, metadata       */
+  --color-text-muted:    var(--color-muted);
+  --color-dim:           oklch(68% 0.008 255);
+
+  /* ── Hairline Rules & Dividers ───────────────────────────────────────── */
+  --color-rule:          oklch(88% 0.005 255);    /* 1px crisp exposed grid hairline  */
+  --color-rule-heavy:    var(--color-ink);        /* 1px-2px solid ink section rule   */
+  --color-border:        var(--color-rule);
+  --color-border-hover:  var(--color-ink);
+
+  /* ── Exactly ONE Signal Ink (Signal Red) ──────────────────────────────── */
+  --color-accent:        oklch(55% 0.21 28);      /* Swiss signal red #e62b1e         */
+  --color-accent-hover:  oklch(48% 0.21 28);
+  --color-accent-dim:    oklch(55% 0.21 28 / 0.08);
+  --color-accent-mid:    oklch(55% 0.21 28 / 0.40);
+  --color-accent-ink:    oklch(99% 0.003 255);    /* paper text on red plate fill     */
+  --color-text-white:    var(--color-accent-ink);
+
+  /* ── Semantic Signals ─────────────────────────────────────────────────── */
+  --color-error:         oklch(55% 0.21 28);      /* signal red                       */
+  --color-error-bg:      oklch(55% 0.21 28 / 0.08);
+  --color-error-border:  oklch(55% 0.21 28 / 0.30);
+  --color-success:       oklch(48% 0.16 145);     /* restrained botanical green       */
+
+  /* ── Single Typeface: Archivo across all roles ────────────────────────── */
+  --font-display:        'Archivo', -apple-system, sans-serif;
+  --font-body:           'Archivo', -apple-system, sans-serif;
+  --font-mono:           'Archivo', monospace;
+  --display-weight:      800;
+  --tracking-display:    -0.045em;
+
+  /* ── Spacing (4pt modular scale) ─────────────────────────────────────── */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   40px;
+  --space-2xl:  64px;
+
+  /* ── Hairlines & Geometry — Zero radius anywhere in Grid ─────────────── */
+  --radius-sm:   0px;
+  --radius-md:   0px;
+  --radius-lg:   0px;
+  --radius-full: 0px;
+  --radius-card: 0px;
+  --radius-btn:  0px;
+
+  /* ── Motion (snapped, geometric, no bounce) ──────────────────────────── */
+  --dur-fast:    120ms;
+  --dur-base:    180ms;
+  --dur-slow:    220ms;
+  --ease-out:    cubic-bezier(0.0, 0, 0.2, 1);
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Focus Ring — Signal Red ─────────────────────────────────────────── */
+  --focus-ring:  0 0 0 2px var(--color-paper), 0 0 0 4px var(--color-accent);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

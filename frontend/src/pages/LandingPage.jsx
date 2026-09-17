@@ -1,245 +1,320 @@
 import React, { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../App';
-import Navbar from '../components/Navbar';
 import BrandLogo from '../components/BrandLogo';
+import Navbar from '../components/Navbar';
+import '../landing.css';
+
+/* Hallmark · theme: Grid · genre: editorial
+ * Swiss neo-grotesque systems design · 12-column exposed grid · Archivo typography
+ * pre-emit critique: P5 H5 E5 S5 R5 V5
+ */
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
 
-  const handleGetStarted = () => {
-    navigate(isAuthenticated ? '/dashboard' : '/register');
-  };
-
-  const handleManageLinks = () => {
-    navigate(isAuthenticated ? '/my-links' : '/login');
-  };
-
+  const handleGetStarted = () => navigate(isAuthenticated ? '/dashboard' : '/register');
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0B0B0B] text-on-surface">
-      {/* Promotional Top Info Bar */}
-      <div className="w-full bg-[#1E1E1E] border-b border-border-subtle py-xs px-md flex items-center justify-center text-center">
-        <p className="font-code-sm text-[11px] text-on-surface-variant">
-          <span className="text-[#FF6B2C] font-bold">SYSTEM ONLINE</span> (v2.4.1) — High performance URL routing and click analytics engine active.
-        </p>
-      </div>
-
+    <div className="landing-shell">
+      {/* ── Public Navbar with 1px hairline border ──────────────────────── */}
       <Navbar />
 
-      <main className="flex-grow flex flex-col relative w-full max-w-container-max mx-auto px-margin-mobile md:px-lg">
-        
-        {/* Hero Section */}
-        <section className="relative pt-2xl pb-2xl flex flex-col items-center justify-center text-center mt-xl border-b border-border-subtle">
-          <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none z-0"></div>
-          
-          <div className="z-10 flex flex-col items-center max-w-3xl w-full">
-            <div className="inline-flex items-center gap-2 px-sm py-xs rounded bg-surface-level-2 border border-border-subtle mb-lg">
-              <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse"></span>
-              <span className="font-code-sm text-code-sm text-on-surface-variant">LinkEngine Routing Active</span>
-            </div>
+      {/* ── Exposed 12-Column Hairline Grid ─────────────────────────────── */}
+      <div className="rails" aria-hidden="true" />
 
-            <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-md tracking-tight">
-              LINKENGINE — <br className="md:hidden" />Shorten. Share. Track.
-            </h1>
+      {/* ── Main Container (snapped to max-width 1280px) ────────────────── */}
+      <div className="relative z-10 max-w-container-max mx-auto px-md md:px-lg">
 
-            <p className="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-2xl font-normal leading-relaxed">
-              Generate precise technical aliases for your long web links, track client-side request data telemetry, and redirect users with sub-millisecond response rates.
-            </p>
-
-              {/* Primary CTA Buttons */}
-            <div className="flex flex-wrap justify-center gap-md mt-xl">
-              <button
-                onClick={handleGetStarted}
-                className="btn-primary px-xl py-md rounded-lg font-label-caps tracking-widest text-label-caps flex items-center gap-sm"
-              >
-                <span className="material-symbols-outlined text-[18px]">add_link</span>
-                {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
-              </button>
-              <button
-                onClick={handleManageLinks}
-                className="btn-secondary px-xl py-md rounded-lg font-label-caps tracking-widest text-label-caps flex items-center gap-sm"
-              >
-                <span className="material-symbols-outlined text-[18px]">link</span>
-                {isAuthenticated ? 'My Links' : 'Sign In'}
-              </button>
-            </div>
-
-            {/* Brand Flow Graphic */}
-            <div className="relative w-full max-w-lg h-56 bg-surface-level-2 border border-border-subtle rounded-lg overflow-hidden flex items-center justify-center p-md mt-xl">
-              <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
-              <div className="flex items-center justify-between w-full px-lg relative z-10">
-                <div className="flex flex-col items-center gap-xs">
-                  <div className="w-12 h-12 rounded-full bg-[#151515] border border-border-subtle flex items-center justify-center text-on-surface-variant hover:border-[#FF6B2C] hover:text-[#FF6B2C] transition-colors duration-300">
-                    <span className="material-symbols-outlined">link</span>
-                  </div>
-                  <span className="font-code-sm text-[10px] text-on-surface-variant uppercase">Original Link</span>
-                </div>
-                <div className="flex-grow h-[2px] bg-gradient-to-r from-border-subtle via-[#FF6B2C] to-border-subtle mx-md relative">
-                  <div className="absolute top-1/2 left-0 -translate-y-1/2 w-2 h-2 rounded-full bg-[#FF6B2C] animate-pulse"></div>
-                </div>
-                <div className="flex flex-col items-center gap-xs">
-                  <div className="w-16 h-16 rounded-full bg-[#1E1E1E] border-2 border-[#FF6B2C] flex items-center justify-center text-[#FF6B2C] shadow-lg shadow-[#FF6B2C]/20">
-                    <BrandLogo className="w-8 h-8" />
-                  </div>
-                  <span className="font-code-sm text-[10px] text-primary font-bold uppercase tracking-wider">LinkEngine</span>
-                </div>
-                <div className="flex-grow h-[2px] bg-gradient-to-r from-border-subtle via-[#FF6B2C] to-border-subtle mx-md relative">
-                  <div className="absolute top-1/2 right-0 -translate-y-1/2 w-2 h-2 rounded-full bg-[#FF6B2C] animate-pulse"></div>
-                </div>
-                <div className="flex flex-col items-center gap-xs">
-                  <div className="w-12 h-12 rounded-full bg-[#151515] border border-border-subtle flex items-center justify-center text-on-surface-variant hover:border-[#FF6B2C] hover:text-[#FF6B2C] transition-colors duration-300">
-                    <span className="material-symbols-outlined">analytics</span>
-                  </div>
-                  <span className="font-code-sm text-[10px] text-on-surface-variant uppercase">Track & Redirect</span>
-                </div>
+        {/* ── Hero Band — Slammed Left, Asymmetric Occupancy ────────────── */}
+        <section className="py-xl md:py-2xl border-b border-rule">
+          <div className="grid-12 gap-y-xl items-start">
+            
+            {/* Left 7 Columns: Giant Lowercase Display + Copy + CTAs */}
+            <div className="col-span-12 lg:col-span-7 pr-0 lg:pr-xl">
+              <div className="flex items-center gap-sm mb-md">
+                <span className="bar-accent" />
+                <span className="font-label-caps text-xs tracking-widest uppercase font-semibold text-muted">
+                  Sys Ref. 2026 // URL Management Engine
+                </span>
               </div>
-            </div>
 
-          </div>
-        </section>
+              <h1 className="font-display font-extrabold text-[clamp(44px,7.5vw,96px)] tracking-[-0.045em] leading-[0.9] text-ink lowercase mb-lg">
+                shorten once.<br />
+                track everything<span className="period" />
+              </h1>
 
-        {/* Product Explanation Section */}
-        <section id="about" className="py-2xl border-b border-border-subtle">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
-            <div className="space-y-md text-left">
-              <h2 className="font-headline-md text-headline-md text-white">How LinkEngine Works</h2>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                LinkEngine is built for modern developer workflows. When a client accesses a shortened URL, our gateway resolves the hash using MySQL indexes in under 2ms, logs telemetry click metadata, and sends an HTTP 302 redirect.
+              <p className="font-body text-base md:text-lg text-ink/80 max-w-xl mb-xl leading-relaxed">
+                A high-performance URL redirection service engineered with Spring Boot and indexed MySQL.
+                Transform unwieldy web addresses into instant aliases, and capture granular telemetry on every click.
               </p>
-              <ul className="space-y-sm font-code-sm text-code-sm text-[#A1A1AA]">
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#FF6B2C] rounded-full"></span>
-                  High performance Java + Spring Boot core logic.
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#FF6B2C] rounded-full"></span>
-                  JWT authentication keeps URL lists private and protected.
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#FF6B2C] rounded-full"></span>
-                  Detailed click logs generated for every redirect request.
-                </li>
-              </ul>
-            </div>
-            <div className="bg-surface-level-1 border border-border-subtle p-lg rounded-lg space-y-md text-left">
-              <div className="flex items-center justify-between border-b border-border-subtle pb-xs">
-                <span className="font-label-caps text-label-caps text-[#FF6B2C]">API Example Request</span>
-                <span className="font-code-sm text-[10px] text-on-surface-variant">cURL</span>
+
+              <div className="flex flex-wrap items-center gap-sm mb-lg">
+                <button
+                  onClick={handleGetStarted}
+                  className="btn-primary px-xl py-sm text-xs font-semibold uppercase tracking-wider flex items-center gap-xs"
+                >
+                  <span className="material-symbols-outlined text-[16px]">add_link</span>
+                  {isAuthenticated ? 'Open Dashboard' : 'Get Started — Free'}
+                </button>
+                <a
+                  href="#features"
+                  className="btn-secondary px-lg py-sm text-xs font-semibold uppercase tracking-wider flex items-center gap-xs"
+                >
+                  <span className="material-symbols-outlined text-[16px]">south</span>
+                  System Specs
+                </a>
               </div>
-              <pre className="font-code-sm text-code-sm text-on-surface-variant bg-[#0B0B0B] p-md rounded overflow-x-auto border border-border-subtle">
-{`curl -X POST http://localhost:8080/api/urls/shorten \\
-  -H "Authorization: Bearer <JWT_TOKEN>" \\
-  -H "Content-Type: application/json" \\
-  -d '{"originalUrl": "https://example.com"}'`}
-              </pre>
+
+              {/* Stack Spec Marks */}
+              <div className="flex flex-wrap items-center gap-md pt-md border-t border-rule text-xs font-label-caps uppercase tracking-wider text-muted">
+                <span className="flex items-center gap-xs">
+                  <span className="w-1.5 h-1.5 bg-accent inline-block" /> Spring Boot
+                </span>
+                <span className="flex items-center gap-xs">
+                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> MySQL Indexed
+                </span>
+                <span className="flex items-center gap-xs">
+                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> JWT Auth
+                </span>
+                <span className="flex items-center gap-xs">
+                  <span className="w-1.5 h-1.5 bg-ink inline-block" /> Open Source
+                </span>
+              </div>
             </div>
+
+            {/* Right 5 Columns: Constructed Swiss Architecture Object */}
+            <div className="col-span-12 lg:col-span-5 border border-rule bg-paper-2 p-md md:p-lg">
+              <div className="flex justify-between items-center pb-sm border-b border-rule mb-md">
+                <div className="font-label-caps text-[11px] uppercase tracking-widest font-semibold text-muted">
+                  FIG 01 // Redirection Protocol
+                </div>
+                <div className="stepped-bars">
+                  <span className="stepped-bar-1" />
+                  <span className="stepped-bar-2" />
+                  <span className="stepped-bar-3" />
+                  <span className="stepped-bar-4" />
+                </div>
+              </div>
+
+              <div className="space-y-sm font-mono text-xs">
+                {/* Protocol Step 1 */}
+                <div className="p-sm bg-paper border border-rule">
+                  <div className="text-[10px] text-muted uppercase tracking-wider font-label-caps mb-1">
+                    01. Input Source
+                  </div>
+                  <div className="text-ink truncate font-semibold">
+                    https://example.com/very/long/target/path
+                  </div>
+                </div>
+
+                {/* Protocol Arrow */}
+                <div className="flex items-center justify-center text-muted py-0.5">
+                  <span className="material-symbols-outlined text-sm">arrow_downward</span>
+                </div>
+
+                {/* Protocol Step 2 */}
+                <div className="p-sm bg-paper border border-rule">
+                  <div className="text-[10px] text-muted uppercase tracking-wider font-label-caps mb-1">
+                    02. B-Tree Index Resolution
+                  </div>
+                  <div className="flex justify-between items-center text-ink">
+                    <span>hash_key: <strong className="text-accent">xK9mP2</strong></span>
+                    <span className="text-muted text-[10px]">O(log N)</span>
+                  </div>
+                </div>
+
+                {/* Protocol Arrow */}
+                <div className="flex items-center justify-center text-muted py-0.5">
+                  <span className="material-symbols-outlined text-sm">arrow_downward</span>
+                </div>
+
+                {/* Protocol Step 3 */}
+                <div className="p-sm bg-paper border border-accent">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] text-accent uppercase tracking-wider font-label-caps font-bold">
+                      03. HTTP 302 Found
+                    </span>
+                    <span className="w-2 h-2 bg-accent inline-block" />
+                  </div>
+                  <div className="text-ink font-bold mt-1">
+                    Redirect executed in 1 round trip
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
-        {/* Bento Grid Features */}
-        <section className="py-2xl w-full">
-          <div className="flex flex-col items-center mb-xl">
-            <h2 className="font-headline-md text-headline-md text-white mb-sm">
-              Features Built for Scale
+        {/* ── The Plate: The Flooded Signal Red Poster Moment ─────────────── */}
+        <section className="plate my-xl p-lg md:p-2xl">
+          <div className="relative z-10 max-w-4xl">
+            <div className="font-label-caps text-xs uppercase tracking-widest font-bold text-paper/80 mb-sm">
+              Core Architectural Differentiator // Plate 01
+            </div>
+            <h2 className="font-display font-extrabold text-[clamp(32px,5.5vw,72px)] tracking-[-0.04em] leading-[0.92] lowercase mb-md text-paper">
+              zero sequential scans.<br />
+              direct indexed dispatch<span className="inline-block w-3 h-3 bg-paper ml-1 align-baseline" />
             </h2>
-            <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl text-center">
-              Built for speed, simplicity, and technical integrity. Track telemetry with minimal overhead.
+            <p className="text-paper/90 font-body text-base max-w-2xl leading-relaxed">
+              Every short code is indexed directly in MySQL. Redirect lookups do not traverse table rows — the database engine jumps straight to the target record for instantaneous response times.
             </p>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
-            {/* Feature 1 */}
-            <div className="card-surface rounded-lg p-lg bg-level-1 text-left flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-center mb-md pb-xs border-b border-border-subtle">
-                  <h3 className="font-headline-sm text-headline-sm text-white">Edge Resolution</h3>
-                  <span className="material-symbols-outlined text-[#FF6B2C]">bolt</span>
-                </div>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">
-                  Links are resolved dynamically on-demand, fetching original targets in sub-millisecond rates.
-                </p>
+        {/* ── Features Matrix: 12-Column Ruled Cells ───────────────────────── */}
+        <section id="features" className="py-xl border-t border-rule" aria-label="System Capabilities">
+          <div className="flex justify-between items-end pb-md border-b border-rule mb-0">
+            <div>
+              <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
+                Specifications
               </div>
-              <div className="font-code-sm text-code-sm text-accent-primary mt-lg">
-                Status: Latency Optimal
-              </div>
+              <h2 className="font-display font-extrabold text-3xl text-ink tracking-tight lowercase">
+                system capabilities<span className="period" />
+              </h2>
             </div>
-
-            {/* Feature 2 */}
-            <div className="card-surface rounded-lg p-lg bg-level-1 text-left flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-center mb-md pb-xs border-b border-[#292929]">
-                  <h3 className="font-headline-sm text-headline-sm text-white">Click Analytics</h3>
-                  <span className="material-symbols-outlined text-[#FF6B2C]">monitoring</span>
-                </div>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">
-                  Each redirect logs access time stamps and logs click counts to help you understand traffic growth.
-                </p>
-              </div>
-              <div className="font-code-sm text-code-sm text-accent-primary mt-lg">
-                Telemetries: Logged
-              </div>
+            <div className="text-right font-mono text-xs text-muted">
+              INDEX 01—04
             </div>
+          </div>
 
-            {/* Feature 3 */}
-            <div className="card-surface rounded-lg p-lg bg-level-1 text-left flex flex-col justify-between">
+          <div className="grid-12 border-l border-rule">
+            {/* Cell 1: Index Engine */}
+            <article className="col-span-12 md:col-span-6 lg:col-span-3 grid-spec-cell flex flex-col justify-between">
               <div>
-                <div className="flex justify-between items-center mb-md pb-xs border-b border-[#292929]">
-                  <h3 className="font-headline-sm text-headline-sm text-white">Secured Storage</h3>
-                  <span className="material-symbols-outlined text-[#FF6B2C]">security</span>
+                <div className="flex justify-between items-start mb-md">
+                  <span className="font-mono text-xs text-muted">01</span>
+                  <span className="material-symbols-outlined text-accent text-xl">bolt</span>
                 </div>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">
-                  JWT authentication with Spring Security isolates URL mappings, keeping your dashboard logs secure.
+                <h3 className="font-display font-extrabold text-lg text-ink lowercase tracking-tight mb-xs">
+                  mysql index lookup
+                </h3>
+                <p className="text-xs text-ink/70 leading-relaxed">
+                  Fast B-Tree index lookup on the short code column ensures instant redirection with minimal database overhead.
                 </p>
               </div>
-              <div className="font-code-sm text-code-sm text-accent-primary mt-lg">
-                Access Control: Active
+              <div className="pt-md mt-md border-t border-rule/60 text-[11px] font-label-caps uppercase tracking-wider text-muted">
+                HTTP 302 Redirect
               </div>
+            </article>
+
+            {/* Cell 2: Granular Telemetry */}
+            <article className="col-span-12 md:col-span-6 lg:col-span-3 grid-spec-cell flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-md">
+                  <span className="font-mono text-xs text-muted">02</span>
+                  <span className="material-symbols-outlined text-accent text-xl">monitoring</span>
+                </div>
+                <h3 className="font-display font-extrabold text-lg text-ink lowercase tracking-tight mb-xs">
+                  click telemetry
+                </h3>
+                <p className="text-xs text-ink/70 leading-relaxed">
+                  Every redirect request logs a timestamped event. Analyze total clicks, daily distributions, and trends per link.
+                </p>
+              </div>
+              <div className="pt-md mt-md border-t border-rule/60 text-[11px] font-label-caps uppercase tracking-wider text-muted">
+                Timestamped Event Log
+              </div>
+            </article>
+
+            {/* Cell 3: JWT Security */}
+            <article className="col-span-12 md:col-span-6 lg:col-span-3 grid-spec-cell flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-md">
+                  <span className="font-mono text-xs text-muted">03</span>
+                  <span className="material-symbols-outlined text-accent text-xl">lock</span>
+                </div>
+                <h3 className="font-display font-extrabold text-lg text-ink lowercase tracking-tight mb-xs">
+                  jwt isolation
+                </h3>
+                <p className="text-xs text-ink/70 leading-relaxed">
+                  Stateless JWT authentication backed by Spring Security. URLs are strictly scoped to authenticated user accounts.
+                </p>
+              </div>
+              <div className="pt-md mt-md border-t border-rule/60 text-[11px] font-label-caps uppercase tracking-wider text-muted">
+                Spring Security 6
+              </div>
+            </article>
+
+            {/* Cell 4: Self-Hostable */}
+            <article className="col-span-12 md:col-span-6 lg:col-span-3 grid-spec-cell flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-md">
+                  <span className="font-mono text-xs text-muted">04</span>
+                  <span className="material-symbols-outlined text-accent text-xl">terminal</span>
+                </div>
+                <h3 className="font-display font-extrabold text-lg text-ink lowercase tracking-tight mb-xs">
+                  self-hostable
+                </h3>
+                <p className="text-xs text-ink/70 leading-relaxed">
+                  Deploy the Spring Boot service anywhere Java and MySQL run. Complete ownership of your data with no third-party lock-in.
+                </p>
+              </div>
+              <div className="pt-md mt-md border-t border-rule/60 text-[11px] font-label-caps uppercase tracking-wider text-muted">
+                Docker / Jar Native
+              </div>
+            </article>
+          </div>
+        </section>
+
+        {/* ── Call to Action Band ─────────────────────────────────────────── */}
+        <section className="py-xl border-t border-b border-rule bg-paper-2">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md px-lg">
+            <div>
+              <h2 className="font-display font-extrabold text-2xl md:text-3xl text-ink tracking-tight lowercase mb-1">
+                ready to deploy<span className="period" />
+              </h2>
+              <p className="text-sm text-muted">
+                Create an account or connect to your local LinkEngine instance.
+              </p>
+            </div>
+            <div className="flex items-center gap-sm">
+              {isAuthenticated ? (
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="btn-primary px-xl py-sm text-xs font-semibold uppercase tracking-wider"
+                >
+                  Go to Dashboard
+                </button>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="btn-secondary px-lg py-sm text-xs font-semibold uppercase tracking-wider"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="btn-primary px-lg py-sm text-xs font-semibold uppercase tracking-wider"
+                  >
+                    Create Account
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </section>
 
-        {/* Trust/Value Section */}
-        <section className="py-2xl border-t border-border-subtle bg-level-1/20 rounded-lg p-lg text-center my-xl">
-          <h3 className="font-headline-md text-headline-md text-white mb-md">High-Performance Link Utilities</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-lg">
-            <div className="p-md bg-[#151515] border border-border-subtle rounded-lg">
-              <p className="font-display-lg-mobile text-[#FF6B2C] font-bold">99.9%</p>
-              <p className="font-code-sm text-[10px] text-on-surface-variant uppercase mt-1">Uptime SLA</p>
-            </div>
-            <div className="p-md bg-[#151515] border border-border-subtle rounded-lg">
-              <p className="font-display-lg-mobile text-[#FF6B2C] font-bold">&lt; 3ms</p>
-              <p className="font-code-sm text-[10px] text-on-surface-variant uppercase mt-1">Redirect Time</p>
-            </div>
-            <div className="p-md bg-[#151515] border border-border-subtle rounded-lg">
-              <p className="font-display-lg-mobile text-[#FF6B2C] font-bold">100%</p>
-              <p className="font-code-sm text-[10px] text-on-surface-variant uppercase mt-1">Open Source</p>
-            </div>
-            <div className="p-md bg-[#151515] border border-border-subtle rounded-lg">
-              <p className="font-display-lg-mobile text-[#FF6B2C] font-bold">MySQL</p>
-              <p className="font-code-sm text-[10px] text-on-surface-variant uppercase mt-1">Indexed Storage</p>
-            </div>
+        {/* ── Swiss Architectural Footer ─────────────────────────────────── */}
+        <footer className="py-lg flex flex-col md:flex-row justify-between items-center gap-md text-xs text-muted font-label-caps uppercase tracking-wider">
+          <div className="flex items-center gap-xs">
+            <BrandLogo className="w-4 h-4" />
+            <span className="text-ink font-bold lowercase font-display text-sm">linkengine</span>
+            <span className="period" />
+            <span className="ml-md text-[11px]">© {new Date().getFullYear()} · Open Source Systems</span>
           </div>
-        </section>
 
-      </main>
+          <div className="flex items-center gap-lg">
+            <a href="#features" className="hover:text-ink transition-colors">Features</a>
+            <Link to="/login" className="hover:text-ink transition-colors">Sign In</Link>
+            <Link to="/register" className="hover:text-ink transition-colors">Register</Link>
+          </div>
+        </footer>
 
-      {/* Footer */}
-      <footer className="bg-surface-dim border-t border-border-subtle w-full py-xl px-lg flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto">
-        <div className="flex items-center gap-2 mb-md md:mb-0">
-          <span className="font-headline-sm text-headline-sm text-primary">LinkEngine</span>
-          <span className="font-body-sm text-body-sm text-on-surface-variant ml-4">
-            © 2026 LinkEngine Inc. All rights reserved.
-          </span>
-        </div>
-        <div className="flex gap-md font-body-sm text-body-sm">
-          <a className="text-on-surface-variant hover:text-on-surface transition-colors" href="#privacy">Privacy Policy</a>
-          <a className="text-on-surface-variant hover:text-on-surface transition-colors" href="#terms">Terms of Service</a>
-          <a className="text-on-surface-variant hover:text-on-surface transition-colors" href="#api">API Docs</a>
-          <a className="text-on-surface-variant hover:text-on-surface transition-colors" href="#contact">Contact</a>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }

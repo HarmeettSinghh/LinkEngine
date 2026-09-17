@@ -15,15 +15,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
+
+    @Value("${frontend.url:http://localhost:5173}")
+    private String frontendUrl;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -65,9 +71,25 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
+        List<String> patterns = new ArrayList<>();
+        if (frontendUrl != null && !frontendUrl.isBlank()) {
+            for (String origin : frontendUrl.split(",")) {
+                String trimmed = origin.trim();
+                if (!trimmed.isEmpty()) {
+                    patterns.add(trimmed);
+                }
+            }
+        }
+        if (patterns.isEmpty()) {
+            patterns.add("http://localhost:5173");
+        }
+        if (!patterns.contains("https://*.vercel.app")) {
+            patterns.add("https://*.vercel.app");
+        }
+
+        configuration.setAllowedOriginPatterns(patterns);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control", "Accept", "X-Requested-With"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../App';
 import { api } from '../services/api';
 import Layout from '../components/Layout';
 import Toast from '../components/Toast';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
+
 export default function DashboardPage() {
-  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
   const [longUrl, setLongUrl] = useState('');
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [shortening, setShortening] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
 
   // Toast state
   const [showToast, setShowToast] = useState(false);
@@ -28,7 +28,6 @@ export default function DashboardPage() {
     setLoading(true);
     try {
       const data = await api.getUserUrls();
-      // Sort by createdDate desc or id desc to get recent links first
       const sorted = [...data].sort((a, b) => {
         return new Date(b.createdDate || 0) - new Date(a.createdDate || 0);
       });
@@ -56,11 +55,10 @@ export default function DashboardPage() {
       const newLink = await api.shortenUrl(longUrl);
       setLastShortened(newLink);
       setToastType('success');
-      setToastMessage('URL Shortened Successfully');
-      setToastDesc(`Created: ${newLink.shortURl}`);
+      setToastMessage('URL Shortened');
+      setToastDesc(`Short code: ${newLink.shortURl}`);
       setShowToast(true);
       setLongUrl('');
-      // Reload links
       fetchLinks();
     } catch (err) {
       setErrorMsg(err.message || 'Failed to shorten URL');
@@ -73,19 +71,16 @@ export default function DashboardPage() {
     }
   };
 
+  // Copy — silent success via icon swap
   const handleCopyLink = (shortCode) => {
-    const fullUrl = `http://localhost:8080/${shortCode}`;
+    const fullUrl = `${BASE_URL}/${shortCode}`;
     navigator.clipboard.writeText(fullUrl);
     setCopiedLink(shortCode);
-    setToastType('success');
-    setToastMessage('Link Copied');
-    setToastDesc('Short URL copied to clipboard');
-    setShowToast(true);
     setTimeout(() => setCopiedLink(''), 2000);
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return '—';
     try {
       const d = new Date(dateString);
       return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -94,206 +89,243 @@ export default function DashboardPage() {
     }
   };
 
-  // Metrics calculations
   const totalLinks = links.length;
   const totalClicks = links.reduce((sum, item) => sum + (item.clickCount || 0), 0);
   const avgClicks = totalLinks > 0 ? (totalClicks / totalLinks).toFixed(1) : '0.0';
-
-  const recentLinks = links.slice(0, 3);
+  const recentLinks = links.slice(0, 5);
 
   return (
     <Layout>
-      <header className="mb-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-lg">
+      {/* ── Page Header: Hallmark Grid Lowercase Display ────────────────── */}
+      <header className="mb-xl pb-md border-b border-rule flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
         <div>
-          <h2 className="font-headline-md text-headline-md md:font-display-lg md:text-display-lg text-on-background">
-            Welcome back, {user?.username || user?.sub || 'User'}
-          </h2>
-          <p className="font-body-lg text-body-lg text-on-surface-variant mt-sm">
-            Here's a quick overview of your links today.
-          </p>
+          <div className="flex items-center gap-xs font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
+            <span className="w-2 h-2 bg-accent inline-block" />
+            <span>Workbench // User: {user?.username || user?.sub || 'user'}</span>
+          </div>
+          <h1 className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight lowercase">
+            dashboard<span className="period" />
+          </h1>
+        </div>
+        <div className="font-mono text-xs text-muted">
+          INDEX PROTOCOL // LIVE
         </div>
       </header>
 
-      {/* Hero Action: Create Short Link */}
-      <section className="mb-2xl bg-level-1 border rounded-lg p-lg md:p-2xl shadow-sm">
-        <div className="border-b border-[#292929] pb-md mb-lg">
-          <h3 className="font-headline-sm text-headline-sm text-primary">CREATE SHORT LINK</h3>
+      {/* ── Shorten URL Workbench Cell ─────────────────────────────────── */}
+      <section className="mb-xl border border-rule bg-paper p-lg">
+        <div className="flex justify-between items-center pb-sm border-b border-rule mb-md">
+          <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
+            01. Generate Short URL Alias
+          </h2>
+          <span className="text-[10px] text-muted font-mono">B-TREE INDEX READY</span>
         </div>
-        <form onSubmit={handleShortenSubmit} className="flex flex-col md:flex-row gap-lg">
-          <div className="flex-1">
-            <label className="sr-only" htmlFor="url-input">
-              Enter Long URL
-            </label>
-            <div className="relative w-full">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-md text-on-surface-variant">
-                <span className="material-symbols-outlined text-outline">link</span>
-              </span>
-              <input
-                id="url-input"
-                type="url"
-                value={longUrl}
-                onChange={(e) => setLongUrl(e.target.value)}
-                placeholder="https://your-long-url.com/very/long/path"
-                className="w-full bg-[#0B0B0B] border border-[#292929] text-on-surface font-code-md text-code-md rounded-DEFAULT py-md pl-xl pr-md focus:border-[#FF6B2C] focus:ring-1 focus:ring-[#FF6B2C] outline-none transition-colors placeholder:text-on-surface-variant/50"
-                required
-              />
-            </div>
+
+        <form onSubmit={handleShortenSubmit} className="flex flex-col md:flex-row gap-sm">
+          <div className="flex-1 relative">
+            <input
+              id="url-input"
+              type="url"
+              value={longUrl}
+              onChange={(e) => setLongUrl(e.target.value)}
+              placeholder="https://domain.com/very/long/target/path"
+              className="input-base w-full px-md py-sm text-sm font-mono text-ink placeholder:text-muted/60"
+              required
+            />
           </div>
           <button
             type="submit"
             disabled={shortening}
-            className="bg-[#FF6B2C] text-[#FFFFFF] font-label-caps text-label-caps py-md px-xl rounded-DEFAULT hover:opacity-90 transition-opacity whitespace-nowrap flex items-center justify-center gap-sm"
+            className="btn-primary py-sm px-xl text-xs uppercase tracking-wider font-semibold whitespace-nowrap flex items-center justify-center gap-xs"
           >
-            <span className="material-symbols-outlined">
-              {shortening ? 'progress_activity' : 'add_link'}
+            <span className="material-symbols-outlined text-[16px]">
+              {shortening ? 'hourglass_empty' : 'add_link'}
             </span>
-            {shortening ? 'Shortening...' : 'Shorten URL'}
+            {shortening ? 'Processing...' : 'Shorten Link'}
           </button>
         </form>
 
+        {/* Shortened URL Output Banner */}
         {lastShortened && (
-          <div className="mt-lg p-md bg-[#1E1E1E] border border-border-subtle rounded-md flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
-            <div className="flex-1 min-w-0 text-left">
-              <span className="font-label-caps text-[10px] text-[#FF6B2C] block mb-1">Your Short Link is Ready</span>
-              <div className="flex items-center gap-sm">
-                <span className="font-code-md text-white font-bold truncate">
-                  http://localhost:8080/{lastShortened.shortURl}
-                </span>
-              </div>
-              <span className="font-code-sm text-[11px] text-[#A1A1AA] block mt-1 truncate">
-                Redirects to: {lastShortened.orignalUrl}
+          <div className="mt-md p-md bg-paper-2 border border-ink flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+            <div className="min-w-0 flex-1">
+              <span className="font-label-caps text-[10px] text-accent uppercase tracking-wider font-bold block mb-0.5">
+                Alias Generated Successfully
+              </span>
+              <span className="font-mono text-sm md:text-base font-bold text-ink truncate block">
+                {BASE_URL}/{lastShortened.shortURl}
+              </span>
+              <span className="font-mono text-xs text-muted truncate block mt-0.5">
+                Target: {lastShortened.orignalUrl}
               </span>
             </div>
-            <div className="flex gap-sm w-full md:w-auto">
+            <div className="flex items-center gap-xs w-full md:w-auto">
               <button
                 onClick={() => handleCopyLink(lastShortened.shortURl)}
-                className="btn-primary px-md py-sm rounded text-body-sm font-label-caps flex-grow md:flex-grow-0"
+                className="btn-primary px-md py-xs text-xs font-semibold uppercase tracking-wider flex-1 md:flex-initial flex items-center justify-center gap-xs"
               >
-                Copy Link
+                <span className="material-symbols-outlined text-[14px]">
+                  {copiedLink === lastShortened.shortURl ? 'check' : 'content_copy'}
+                </span>
+                {copiedLink === lastShortened.shortURl ? 'Copied' : 'Copy'}
               </button>
               <a
-                href={`http://localhost:8080/${lastShortened.shortURl}`}
+                href={`${BASE_URL}/${lastShortened.shortURl}`}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-secondary px-md py-sm rounded text-body-sm font-label-caps text-center flex-grow md:flex-grow-0"
+                className="btn-secondary px-md py-xs text-xs font-semibold uppercase tracking-wider flex-1 md:flex-initial text-center"
               >
-                Test Redirect
+                Test 302
               </a>
             </div>
           </div>
         )}
       </section>
 
-      {/* Metrics Cards Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-lg mb-2xl">
-        {/* Card 1 */}
-        <div className="bg-level-1 border rounded-lg p-lg">
-          <div className="flex justify-between items-start mb-md">
-            <p className="font-label-caps text-label-caps text-on-surface-variant">Total Links</p>
-            <span className="material-symbols-outlined text-primary-container">link</span>
-          </div>
-          <p className="font-headline-md text-headline-md text-on-background">{totalLinks}</p>
-          <div className="mt-sm flex items-center gap-sm text-on-surface-variant">
-            <span className="material-symbols-outlined text-[16px]">horizontal_rule</span>
-            <span className="font-code-sm text-code-sm">Active links in database</span>
-          </div>
+      {/* ── Ruled Metric Cells: High-Contrast Swiss Architecture ───────── */}
+      <section className="mb-xl">
+        <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-sm">
+          02. Key Telemetry
         </div>
-        {/* Card 2 */}
-        <div className="bg-level-1 border rounded-lg p-lg">
-          <div className="flex justify-between items-start mb-md">
-            <p className="font-label-caps text-label-caps text-on-surface-variant">Total Clicks</p>
-            <span className="material-symbols-outlined text-primary-container">ads_click</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-rule">
+          
+          {/* Primary Metric: Total Clicks */}
+          <div className="border-r border-b border-rule p-lg bg-paper flex flex-col justify-between">
+            <div className="flex justify-between items-start mb-md">
+              <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
+                Total Redirections
+              </span>
+              <span className="w-2 h-2 bg-accent inline-block" />
+            </div>
+            <div>
+              <p className="font-display text-4xl md:text-5xl font-extrabold text-ink tracking-tight">
+                {totalClicks}
+              </p>
+              <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
+                Aggregate Click Telemetry
+              </p>
+            </div>
           </div>
-          <p className="font-headline-md text-headline-md text-on-background">{totalClicks}</p>
-          <div className="mt-sm flex items-center gap-sm text-tertiary">
-            <span className="material-symbols-outlined text-[16px]">trending_up</span>
-            <span className="font-code-sm text-code-sm">Total redirection requests</span>
+
+          {/* Metric 2: Total Links */}
+          <div className="border-r border-b border-rule p-lg bg-paper flex flex-col justify-between">
+            <div className="flex justify-between items-start mb-md">
+              <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
+                Total Short Links
+              </span>
+              <span className="material-symbols-outlined text-muted text-base">link</span>
+            </div>
+            <div>
+              <p className="font-display text-4xl md:text-5xl font-extrabold text-ink tracking-tight">
+                {totalLinks}
+              </p>
+              <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
+                Active B-Tree Records
+              </p>
+            </div>
           </div>
-        </div>
-        {/* Card 3 */}
-        <div className="bg-level-1 border rounded-lg p-lg">
-          <div className="flex justify-between items-start mb-md">
-            <p className="font-label-caps text-label-caps text-on-surface-variant">Avg. Clicks/Link</p>
-            <span className="material-symbols-outlined text-primary-container">data_usage</span>
+
+          {/* Metric 3: Avg Clicks */}
+          <div className="border-r border-b border-rule p-lg bg-paper flex flex-col justify-between">
+            <div className="flex justify-between items-start mb-md">
+              <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
+                Mean Clicks / Link
+              </span>
+              <span className="material-symbols-outlined text-muted text-base">monitoring</span>
+            </div>
+            <div>
+              <p className="font-display text-4xl md:text-5xl font-extrabold text-ink tracking-tight">
+                {avgClicks}
+              </p>
+              <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
+                Performance Ratio
+              </p>
+            </div>
           </div>
-          <p className="font-headline-md text-headline-md text-on-background">{avgClicks}</p>
-          <div className="mt-sm flex items-center gap-sm text-on-surface-variant">
-            <span className="material-symbols-outlined text-[16px]">horizontal_rule</span>
-            <span className="font-code-sm text-code-sm">Link performance average</span>
-          </div>
+
         </div>
       </section>
 
-      {/* Recent Links Table */}
-      <section className="bg-level-1 border rounded-lg overflow-hidden">
-        <div className="p-lg border-b border-[#292929] flex justify-between items-center bg-level-2">
-          <h3 className="font-headline-sm text-headline-sm text-on-background">Recent Links</h3>
+      {/* ── Recent Links Table: Swiss Directory Format ──────────────────── */}
+      <section className="border border-rule bg-paper">
+        <div className="p-md border-b border-rule flex justify-between items-center bg-paper-2">
+          <div className="flex items-center gap-xs">
+            <span className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
+              03. Recent Link Index
+            </span>
+          </div>
           <Link
             to="/my-links"
-            className="text-primary-container font-label-caps text-label-caps flex items-center gap-xs hover:underline"
+            className="font-label-caps text-xs uppercase tracking-wider text-accent font-semibold flex items-center gap-xs hover:underline"
           >
-            View All <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            Full Archive <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
           </Link>
         </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse font-mono text-xs">
             <thead>
-              <tr className="border-b border-[#292929]">
-                <th className="p-md font-label-caps text-label-caps text-on-surface-variant font-normal">Original URL</th>
-                <th className="p-md font-label-caps text-label-caps text-on-surface-variant font-normal">Short URL</th>
-                <th className="p-md font-label-caps text-label-caps text-on-surface-variant font-normal">Created</th>
-                <th className="p-md font-label-caps text-label-caps text-on-surface-variant font-normal text-right">Clicks</th>
-                <th className="p-md font-label-caps text-label-caps text-on-surface-variant font-normal text-center">Actions</th>
+              <tr className="border-b border-rule bg-paper text-muted font-label-caps text-[11px] uppercase tracking-wider">
+                <th className="p-md font-semibold">Short Code</th>
+                <th className="p-md font-semibold">Original Target URL</th>
+                <th className="p-md font-semibold">Registered</th>
+                <th className="p-md font-semibold text-right">Clicks</th>
+                <th className="p-md font-semibold text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="font-code-md text-code-md">
+            <tbody className="divide-y divide-rule">
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="p-md text-center text-on-surface-variant">
-                    Loading links...
+                  <td colSpan="5" className="p-lg text-center text-muted font-body">
+                    Querying link registry...
                   </td>
                 </tr>
               ) : recentLinks.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="p-md text-center text-on-surface-variant">
-                    No links shortened yet. Shorten your first link above!
+                  <td colSpan="5" className="p-lg text-center text-muted font-body">
+                    No active URLs found. Generate your first alias above.
                   </td>
                 </tr>
               ) : (
                 recentLinks.map((link) => (
-                  <tr key={link.id} className="border-b border-[#292929] hover:bg-surface-container-high transition-colors">
-                    <td className="p-md text-on-surface max-w-[200px] truncate" title={link.orignalUrl}>
-                      {link.orignalUrl}
-                    </td>
-                    <td className="p-md text-primary-container">
+                  <tr key={link.id} className="hover:bg-paper-2 transition-colors">
+                    <td className="p-md font-bold text-ink">
                       <a
-                        href={`http://localhost:8080/${link.shortURl}`}
+                        href={`${BASE_URL}/${link.shortURl}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="hover:underline font-bold text-[#FF6B2C]"
+                        className="text-accent hover:underline flex items-center gap-xs"
                       >
                         {link.shortURl}
+                        <span className="material-symbols-outlined text-[12px]">open_in_new</span>
                       </a>
                     </td>
-                    <td className="p-md text-on-surface-variant">{formatDate(link.createdDate)}</td>
-                    <td className="p-md text-on-surface text-right">{link.clickCount || 0}</td>
+                    <td className="p-md text-muted max-w-xs truncate" title={link.orignalUrl}>
+                      {link.orignalUrl}
+                    </td>
+                    <td className="p-md text-muted">
+                      {formatDate(link.createdDate)}
+                    </td>
+                    <td className="p-md text-right font-bold text-ink">
+                      {link.clickCount || 0}
+                    </td>
                     <td className="p-md text-center">
-                      <div className="flex justify-center gap-sm">
+                      <div className="flex justify-center items-center gap-xs">
                         <button
                           onClick={() => handleCopyLink(link.shortURl)}
-                          className="text-on-surface-variant hover:text-primary transition-colors flex items-center"
-                          title="Copy Link"
+                          className="p-xs text-muted hover:text-accent transition-colors"
+                          title={copiedLink === link.shortURl ? 'Copied' : 'Copy'}
                         >
-                          <span className="material-symbols-outlined text-[18px]">
+                          <span className="material-symbols-outlined text-[16px]">
                             {copiedLink === link.shortURl ? 'check' : 'content_copy'}
                           </span>
                         </button>
                         <Link
                           to={`/analytics?shortUrl=${link.shortURl}`}
-                          className="text-on-surface-variant hover:text-primary transition-colors flex items-center"
+                          className="p-xs text-muted hover:text-accent transition-colors"
                           title="View Analytics"
                         >
-                          <span className="material-symbols-outlined text-[18px]">bar_chart</span>
+                          <span className="material-symbols-outlined text-[16px]">monitoring</span>
                         </Link>
                       </div>
                     </td>
@@ -305,7 +337,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Toast Alert */}
+      {/* Notification Toast */}
       <Toast
         show={showToast}
         message={toastMessage}

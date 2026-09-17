@@ -8,6 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Material Design 3 colour system (retained — used by existing JSX)
         "inverse-primary": "#a83900",
         "outline": "#a98a7f",
         "surface-bright": "#463630",
@@ -56,25 +57,34 @@ export default {
         "primary-fixed-dim": "#ffb59a",
         "tertiary": "#6cd2ff",
         
-        // Custom additions for strict style guidance mapping
-        "bg-base": "#0B0B0B",
-        "surface-level-1": "#151515",
-        "surface-level-2": "#1E1E1E",
-        "border-subtle": "#292929",
-        "border-hover": "#333333",
-        "accent-primary": "#FF6B2C",
-
-        // Login Page specific
-        "custom-bg": "#0B0B0B",
-        "custom-surface": "#151515",
-        "custom-border": "#292929",
-        "custom-primary": "#FF6B2C"
+        // Semantic design tokens — Hallmark Grid Theme
+        "paper":            "var(--color-paper)",
+        "paper-2":          "var(--color-paper-2)",
+        "paper-3":          "var(--color-paper-3)",
+        "ink":              "var(--color-ink)",
+        "muted":            "var(--color-muted)",
+        "dim":              "var(--color-dim)",
+        "rule":             "var(--color-rule)",
+        "accent":           "var(--color-accent)",
+        "accent-dim":       "var(--color-accent-dim)",
+        
+        // Semantic aliases
+        "bg-base":          "var(--color-paper)",
+        "surface-level-1":  "var(--color-paper)",
+        "surface-level-2":  "var(--color-paper-2)",
+        "border-subtle":    "var(--color-rule)",
+        "border-hover":     "var(--color-ink)",
+        "accent-primary":   "var(--color-accent)",
+        "accent-hover":     "var(--color-accent-hover)",
       },
       borderRadius: {
-        "DEFAULT": "0.25rem",
-        "lg": "0.5rem",
-        "xl": "0.75rem",
-        "full": "9999px"
+        "DEFAULT": "0px",
+        "none": "0px",
+        "sm": "0px",
+        "md": "0px",
+        "lg": "0px",
+        "xl": "0px",
+        "full": "0px"
       },
       spacing: {
         "unit": "4px",
@@ -86,34 +96,37 @@ export default {
         "xl": "40px",
         "xs": "4px",
         "2xl": "64px",
-        "container-max": "1440px"
+        "container-max": "1280px"
       },
       fontFamily: {
-        "label-caps": ["Hanken Grotesk"],
-        "headline-md": ["Space Grotesk"],
-        "code-sm": ["JetBrains Mono"],
-        "headline-sm": ["Space Grotesk"],
-        "display-lg-mobile": ["Space Grotesk"],
-        "body-sm": ["Hanken Grotesk"],
-        "body-lg": ["Hanken Grotesk"],
-        "body-md": ["Hanken Grotesk"],
-        "display-lg": ["Space Grotesk"],
-        "code-md": ["JetBrains Mono"]
+        "sans": ["Archivo", "sans-serif"],
+        "display": ["Archivo", "sans-serif"],
+        "body": ["Archivo", "sans-serif"],
+        "label-caps": ["Archivo", "sans-serif"],
+        "headline-md": ["Archivo", "sans-serif"],
+        "code-sm": ["Archivo", "monospace"],
+        "headline-sm": ["Archivo", "sans-serif"],
+        "display-lg-mobile": ["Archivo", "sans-serif"],
+        "body-sm": ["Archivo", "sans-serif"],
+        "body-lg": ["Archivo", "sans-serif"],
+        "body-md": ["Archivo", "sans-serif"],
+        "display-lg": ["Archivo", "sans-serif"],
+        "code-md": ["Archivo", "monospace"]
       },
       fontSize: {
-        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }],
-        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
-        "code-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }],
-        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
-        "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.09em", fontWeight: "600" }],
+        "headline-md": ["28px", { lineHeight: "34px", letterSpacing: "-0.03em", fontWeight: "800" }],
+        "code-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+        "headline-sm": ["22px", { lineHeight: "28px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "display-lg-mobile": ["36px", { lineHeight: "40px", letterSpacing: "-0.04em", fontWeight: "800" }],
         "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
-        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+        "body-lg": ["18px", { lineHeight: "26px", fontWeight: "400" }],
         "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
-        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
-        "code-md": ["14px", { lineHeight: "20px", fontWeight: "400" }]
+        "display-lg": ["56px", { lineHeight: "56px", letterSpacing: "-0.045em", fontWeight: "800" }],
+        "code-md": ["14px", { lineHeight: "20px", fontWeight: "500" }]
       },
       backgroundImage: {
-        'grid-pattern': "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm39 39V1H1v38h38z' fill='%23292929' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E\")",
+        'grid-pattern': "repeating-linear-gradient(to right, var(--color-rule) 0, var(--color-rule) 1px, transparent 1px, transparent calc(100% / 12))",
       }
     },
   },

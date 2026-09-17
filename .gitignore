@@ -78,8 +78,8 @@ Desktop.ini
 .env.*
 !.env.example
 
-# Spring Boot application secrets — use application.properties.example as template
-url-shortener-sb/src/main/resources/application.properties
+# Spring Boot application secrets — application.properties uses env vars with local defaults
+# url-shortener-sb/src/main/resources/application.properties
 application-local.yml
 application-local.properties
 application-prod.yml

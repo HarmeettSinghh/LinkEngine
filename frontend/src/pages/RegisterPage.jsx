@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
+import BrandLogo from '../components/BrandLogo';
 import Toast from '../components/Toast';
 
 export default function RegisterPage() {
@@ -10,11 +11,12 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Toast state
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastDesc, setToastDesc] = useState('');
@@ -39,13 +41,11 @@ export default function RegisterPage() {
     try {
       await api.register(username, email, password);
       setToastType('success');
-      setToastMessage('Registration Successful');
-      setToastDesc('Your account has been created. Redirecting to Login...');
+      setToastMessage('Account Registered');
+      setToastDesc('Redirecting to authentication portal...');
       setShowToast(true);
 
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500);
+      setTimeout(() => { navigate('/login'); }, 1200);
     } catch (err) {
       setErrorMsg(err.message || 'Registration failed');
       setToastType('error');
@@ -57,124 +57,164 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col antialiased bg-[#0B0B0B] text-on-surface">
-      <main className="flex-grow flex items-center justify-center p-md md:p-lg relative overflow-hidden">
-        {/* Background Tech Accent */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 flex items-center justify-center">
-          <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern height="40" id="grid" patternUnits="userSpaceOnUse" width="40">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#292929" strokeWidth="1"></path>
-              </pattern>
-            </defs>
-            <rect fill="url(#grid)" height="100%" width="100%"></rect>
-          </svg>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-paper text-ink relative p-md overflow-x-clip font-body">
+      {/* ── Exposed 12-Column Grid Rails ─────────────────────────────────── */}
+      <div className="rails" aria-hidden="true" />
 
-        {/* Registration Card */}
-        <div className="card-surface w-full max-w-[480px] p-lg rounded flex flex-col gap-lg relative z-10 shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
-          {/* Header */}
-          <div className="flex flex-col items-center gap-sm border-b border-[#292929] pb-md">
-            <div className="flex items-center gap-sm text-primary-container">
-              <span className="material-symbols-outlined text-[32px] text-accent-primary">link</span>
-              <h1 className="font-headline-md text-headline-md text-on-background">LinkEngine</h1>
-            </div>
-            <p className="font-body-md text-body-md text-on-surface-variant">Create your account</p>
+      <main className="w-full max-w-[480px] relative z-10">
+        <div className="border border-rule bg-paper">
+          {/* Header Strip */}
+          <div className="p-lg border-b border-rule bg-paper-2 flex justify-between items-center">
+            <Link to="/" className="flex items-center gap-xs">
+              <BrandLogo className="w-5 h-5" />
+              <span className="font-display font-extrabold text-base text-ink lowercase tracking-tight">
+                linkengine
+              </span>
+              <span className="period" />
+            </Link>
+            <span className="font-label-caps text-[10px] uppercase tracking-widest text-muted font-mono">
+              SYS-REG // 02
+            </span>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-md">
+          <div className="p-lg md:p-xl">
+            <h1 className="font-display font-extrabold text-3xl text-ink tracking-tight lowercase mb-xs">
+              create account<span className="period" />
+            </h1>
+            <p className="font-mono text-xs text-muted mb-lg">
+              Initialize a dedicated URL partition on this instance.
+            </p>
+
             {errorMsg && (
-              <div className="p-md rounded bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 text-[#ffb4ab] text-body-sm">
-                {errorMsg}
+              <div className="mb-md p-sm bg-accent/8 border border-accent text-accent font-mono text-xs flex items-center gap-xs">
+                <span className="material-symbols-outlined text-[16px]">priority_high</span>
+                <span>{errorMsg}</span>
               </div>
             )}
 
-            <div className="flex flex-col gap-xs">
-              <label className="font-label-caps text-label-caps text-on-surface-variant" htmlFor="username">
-                Username
-              </label>
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Harmeet"
-                className="input-tech rounded p-sm font-code-sm text-code-sm"
-                required
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-md">
+              {/* Username */}
+              <div>
+                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1" htmlFor="username">
+                  Username Handle
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="operator"
+                  className="input-base w-full px-md py-sm text-xs font-mono"
+                  required
+                />
+              </div>
 
-            <div className="flex flex-col gap-xs">
-              <label className="font-label-caps text-label-caps text-on-surface-variant" htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="harmeet@email.com"
-                className="input-tech rounded p-sm font-code-sm text-code-sm"
-                required
-              />
-            </div>
+              {/* Email */}
+              <div>
+                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1" htmlFor="reg-email">
+                  Email Address
+                </label>
+                <input
+                  id="reg-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="operator@linkengine.io"
+                  className="input-base w-full px-md py-sm text-xs font-mono"
+                  required
+                  autoComplete="email"
+                />
+              </div>
 
-            <div className="flex flex-col gap-xs">
-              <label className="font-label-caps text-label-caps text-on-surface-variant" htmlFor="password">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="input-tech rounded p-sm font-code-sm text-code-sm"
-                required
-              />
-            </div>
+              {/* Password */}
+              <div>
+                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1" htmlFor="reg-password">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="reg-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="input-base w-full px-md py-sm pr-xl text-xs font-mono"
+                    required
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-sm flex items-center text-muted hover:text-ink"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">
+                      {showPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+              </div>
 
-            <div className="flex flex-col gap-xs">
-              <label className="font-label-caps text-label-caps text-on-surface-variant" htmlFor="confirm_password">
-                Confirm Password
-              </label>
-              <input
-                id="confirm_password"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                className="input-tech rounded p-sm font-code-sm text-code-sm"
-                required
-              />
-            </div>
+              {/* Confirm Password */}
+              <div>
+                <label className="font-label-caps text-[11px] uppercase tracking-wider text-muted font-semibold block mb-1" htmlFor="confirm-password">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="confirm-password"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="input-base w-full px-md py-sm pr-xl text-xs font-mono"
+                    required
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-sm flex items-center text-muted hover:text-ink"
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">
+                      {showConfirmPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+              </div>
 
-            <div className="pt-sm flex flex-col gap-sm">
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary rounded p-sm font-label-caps text-label-caps w-full hover:opacity-90 transition-opacity py-md flex items-center justify-center gap-sm"
-              >
-                <span>{loading ? 'Registering...' : 'Create Account'}</span>
-              </button>
-              <Link
-                to="/login"
-                className="btn-secondary rounded p-sm font-label-caps text-label-caps w-full text-center hover:bg-[#1E1E1E] transition-colors py-md"
-              >
-                Already have an account? Login
-              </Link>
-            </div>
-          </form>
+              {/* Submit & Login Links */}
+              <div className="pt-sm space-y-sm">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary w-full py-sm text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-xs"
+                >
+                  <span className="material-symbols-outlined text-[16px]">
+                    {loading ? 'hourglass_empty' : 'how_to_reg'}
+                  </span>
+                  {loading ? 'Registering...' : 'Register Operator Account'}
+                </button>
 
-          {/* Footer Accents */}
-          <div className="pt-md border-t border-[#292929] flex justify-between items-center opacity-50">
-            <span className="font-code-sm text-code-sm text-on-surface-variant">v.2.4.1</span>
-            <span className="font-code-sm text-code-sm text-on-surface-variant">Secure Connection</span>
+                <Link
+                  to="/login"
+                  className="btn-secondary w-full block text-center py-sm text-xs uppercase tracking-wider font-semibold"
+                >
+                  Already Registered? Sign In
+                </Link>
+              </div>
+            </form>
+          </div>
+
+          {/* Footer Strip */}
+          <div className="p-sm border-t border-rule bg-paper-2 flex justify-between items-center text-[10px] font-mono text-muted">
+            <span>ISOLATED TENANT REGISTRATION</span>
+            <span className="text-accent font-bold">SHA-256</span>
           </div>
         </div>
       </main>
-      
+
       <Toast
         show={showToast}
         message={toastMessage}

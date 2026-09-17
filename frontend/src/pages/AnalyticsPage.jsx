@@ -28,19 +28,19 @@ ChartJS.register(
   Filler
 );
 
+const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
+
 export default function AnalyticsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialShortUrl = searchParams.get('shortUrl') || '';
 
   const [links, setLinks] = useState([]);
   const [selectedShortUrl, setSelectedShortUrl] = useState(initialShortUrl);
-  const [period, setPeriod] = useState('7'); // '7' or '30' or '365'
+  const [period, setPeriod] = useState('7');
   const [analyticsData, setAnalyticsData] = useState([]);
-  
-  const [loading, setLoading] = useState(false);
-  const [loadingLinks, setLoadingLinks] = useState(false);
 
-  // Toast state
+  const [loading, setLoading] = useState(false);
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastDesc, setToastDesc] = useState('');
@@ -48,15 +48,11 @@ export default function AnalyticsPage() {
 
   const formatLocalISO = (date) => {
     const pad = (num) => String(num).padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
-      date.getHours()
-    )}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   };
 
-  // Load user links to select from
   useEffect(() => {
     const loadLinks = async () => {
-      setLoadingLinks(true);
       try {
         const data = await api.getUserUrls();
         setLinks(data);
@@ -65,25 +61,18 @@ export default function AnalyticsPage() {
         }
       } catch (err) {
         console.error('Failed to load links for dropdown', err);
-      } finally {
-        setLoadingLinks(false);
       }
     };
     loadLinks();
   }, []);
 
-  // Update selection if query param changes
   useEffect(() => {
     const urlParam = searchParams.get('shortUrl');
-    if (urlParam) {
-      setSelectedShortUrl(urlParam);
-    }
+    if (urlParam) setSelectedShortUrl(urlParam);
   }, [searchParams]);
 
-  // Load analytics when selection or period changes
   useEffect(() => {
     if (!selectedShortUrl) return;
-
     const loadAnalytics = async () => {
       setLoading(true);
       try {
@@ -91,11 +80,7 @@ export default function AnalyticsPage() {
         const start = new Date();
         const days = parseInt(period, 10);
         start.setDate(start.getDate() - days);
-
-        const startDateStr = formatLocalISO(start);
-        const endDateStr = formatLocalISO(end);
-
-        const data = await api.getUrlAnalytics(selectedShortUrl, startDateStr, endDateStr);
+        const data = await api.getUrlAnalytics(selectedShortUrl, formatLocalISO(start), formatLocalISO(end));
         setAnalyticsData(data || []);
       } catch (err) {
         console.error('Failed to load analytics', err);
@@ -108,74 +93,59 @@ export default function AnalyticsPage() {
         setLoading(false);
       }
     };
-
     loadAnalytics();
   }, [selectedShortUrl, period]);
 
-  // Process chart data
   const daysCount = parseInt(period, 10);
-  
+
   const generateLabelsAndData = () => {
     const labels = [];
     const counts = [];
-    
     for (let i = daysCount - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0]; // YYYY-MM-DD
-      
-      // Formatting label for display: e.g. "Mon" or "Oct 24"
+      const dateStr = d.toISOString().split('T')[0];
       let displayLabel = d.toLocaleDateString('en-US', { weekday: 'short' });
-      if (daysCount > 7) {
-        displayLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      }
-      
+      if (daysCount > 7) displayLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       labels.push(displayLabel);
-
-      // Find match in analyticsData
       const match = analyticsData.find((item) => {
-        // clickDate might be YYYY-MM-DD array or string
         if (Array.isArray(item.clickDate)) {
           const [y, m, day] = item.clickDate;
           const pad = (n) => String(n).padStart(2, '0');
           return `${y}-${pad(m)}-${pad(day)}` === dateStr;
         }
-        // string check
         return item.clickDate === dateStr;
       });
-
       counts.push(match ? match.count : 0);
     }
-
     return { labels, counts };
   };
 
   const { labels: chartLabels, counts: chartDataPoints } = generateLabelsAndData();
-
   const totalClicksSelected = chartDataPoints.reduce((sum, val) => sum + val, 0);
-
   const selectedLinkDetails = links.find((l) => l.shortURl === selectedShortUrl);
   const selectedLinkTotalClicks = selectedLinkDetails ? selectedLinkDetails.clickCount : 0;
   const selectedLinkCreatedDate = selectedLinkDetails
     ? new Date(selectedLinkDetails.createdDate).toLocaleDateString()
-    : 'N/A';
+    : '—';
 
+  // Swiss Graph Styles — Signal Red & Ink
   const chartData = {
     labels: chartLabels,
     datasets: [
       {
-        label: 'Clicks',
+        label: 'Redirect Clicks',
         data: chartDataPoints,
-        borderColor: '#FF6B2C',
-        backgroundColor: 'rgba(255, 107, 44, 0.1)',
+        borderColor: '#e62b1e',
+        backgroundColor: 'rgba(230, 43, 30, 0.06)',
         borderWidth: 2,
-        pointBackgroundColor: '#151515',
-        pointBorderColor: '#FF6B2C',
+        pointBackgroundColor: '#16171d',
+        pointBorderColor: '#e62b1e',
         pointBorderWidth: 2,
         pointRadius: 4,
         pointHoverRadius: 6,
         fill: true,
-        tension: 0.4,
+        tension: 0.1, // Snapped, geometric lines
       },
     ],
   };
@@ -184,59 +154,31 @@ export default function AnalyticsPage() {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
       tooltip: {
-        backgroundColor: '#1E1E1E',
-        titleColor: '#f7ddd5',
-        bodyColor: '#f7ddd5',
-        borderColor: '#333333',
+        backgroundColor: '#16171d',
+        titleColor: '#ffffff',
+        bodyColor: '#dedfe5',
+        borderColor: '#16171d',
         borderWidth: 1,
-        padding: 12,
+        padding: 10,
+        cornerRadius: 0,
         displayColors: false,
-        titleFont: {
-          family: 'Space Grotesk',
-          size: 14,
-          weight: 'bold',
-        },
-        bodyFont: {
-          family: 'JetBrains Mono',
-          size: 12,
-        },
+        titleFont: { family: 'Archivo', size: 12, weight: 'bold' },
+        bodyFont: { family: 'Archivo', size: 12 },
       },
     },
     scales: {
       x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: '#e2bfb3',
-          font: {
-            family: 'JetBrains Mono',
-            size: 10,
-          },
-        },
+        grid: { color: '#dedfe5' },
+        ticks: { color: '#737682', font: { family: 'Archivo', size: 10 } },
       },
       y: {
-        grid: {
-          color: '#292929',
-        },
-        ticks: {
-          color: '#e2bfb3',
-          font: {
-            family: 'JetBrains Mono',
-            size: 10,
-          },
-          precision: 0,
-        },
+        grid: { color: '#dedfe5' },
+        ticks: { color: '#737682', font: { family: 'Archivo', size: 10 }, precision: 0 },
       },
     },
-    interaction: {
-      intersect: false,
-      mode: 'index',
-    },
+    interaction: { intersect: false, mode: 'index' },
   };
 
   const totalLinksCount = links.length;
@@ -245,17 +187,24 @@ export default function AnalyticsPage() {
 
   return (
     <Layout>
-      {/* Header */}
-      <header className="sticky top-0 z-30 bg-[#0B0B0B]/80 backdrop-blur-md border-b border-[#292929] pb-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-md mb-lg">
+      {/* ── Page Header: Hallmark Grid Lowercase Display ────────────────── */}
+      <header className="mb-xl pb-md border-b border-rule flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
         <div>
-          <h2 className="font-headline-md text-headline-md text-on-surface">Analytics Overview</h2>
+          <div className="font-label-caps text-xs uppercase tracking-widest text-muted font-semibold mb-1">
+            Telemetry // Time-Series Log
+          </div>
+          <h1 className="font-display font-extrabold text-3xl md:text-5xl text-ink tracking-tight lowercase">
+            analytics<span className="period" />
+          </h1>
           {selectedShortUrl && (
-            <p className="font-code-sm text-code-sm text-accent-primary mt-1">
-              Active Link: http://localhost:8080/{selectedShortUrl}
+            <p className="font-mono text-xs text-muted mt-1">
+              TARGET ALIAS: <strong className="text-accent">{BASE_URL}/{selectedShortUrl}</strong>
             </p>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-md w-full sm:w-auto">
+
+        {/* Filter Controls: 0-radius hairlines */}
+        <div className="flex flex-wrap items-center gap-xs w-full md:w-auto">
           {links.length > 0 && (
             <select
               value={selectedShortUrl}
@@ -263,19 +212,17 @@ export default function AnalyticsPage() {
                 setSelectedShortUrl(e.target.value);
                 setSearchParams({ shortUrl: e.target.value });
               }}
-              className="input-field rounded font-code-sm text-code-sm text-on-surface px-md py-sm flex-grow sm:flex-grow-0 min-w-[160px]"
+              className="input-base text-xs font-mono px-md py-xs flex-grow md:flex-initial"
             >
               {links.map((link) => (
-                <option key={link.id} value={link.shortURl}>
-                  {link.shortURl}
-                </option>
+                <option key={link.id} value={link.shortURl}>{link.shortURl}</option>
               ))}
             </select>
           )}
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
-            className="input-field rounded font-code-sm text-code-sm text-on-surface px-md py-sm"
+            className="input-base text-xs font-mono px-md py-xs"
           >
             <option value="7">Last 7 Days</option>
             <option value="30">Last 30 Days</option>
@@ -284,120 +231,132 @@ export default function AnalyticsPage() {
         </div>
       </header>
 
-      <div className="space-y-2xl">
-        {/* Metrics Row */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-lg">
-          <div className="surface-card p-md rounded-lg flex flex-col gap-sm bg-level-1">
-            <div className="flex justify-between items-start">
-              <span className="font-label-caps text-label-caps text-on-surface-variant">Selected Link Clicks (All Time)</span>
-              <span className="material-symbols-outlined text-primary text-accent-primary">touch_app</span>
+      {/* ── Metric Cells ────────────────────────────────────────────────── */}
+      <section className="mb-xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-rule">
+          <div className="border-r border-b border-rule p-lg bg-paper">
+            <div className="flex justify-between items-start mb-md">
+              <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
+                Selected Link Clicks
+              </span>
+              <span className="w-2 h-2 bg-accent inline-block" />
             </div>
-            <div className="font-headline-md text-headline-md text-on-surface">
+            <p className="font-display text-4xl md:text-5xl font-extrabold text-ink tracking-tight">
               {selectedShortUrl ? selectedLinkTotalClicks : 0}
-            </div>
-            <div className="font-code-sm text-code-sm text-on-surface-variant">
-              Created on: {selectedLinkCreatedDate}
-            </div>
+            </p>
+            <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
+              Registered: {selectedLinkCreatedDate}
+            </p>
           </div>
 
-          <div className="surface-card p-md rounded-lg flex flex-col gap-sm bg-level-1">
-            <div className="flex justify-between items-start">
-              <span className="font-label-caps text-label-caps text-on-surface-variant">Total Account Links</span>
-              <span className="material-symbols-outlined text-primary text-accent-primary">link</span>
+          <div className="border-r border-b border-rule p-lg bg-paper">
+            <div className="flex justify-between items-start mb-md">
+              <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
+                Period Volume
+              </span>
+              <span className="material-symbols-outlined text-muted text-base">date_range</span>
             </div>
-            <div className="font-headline-md text-headline-md text-on-surface">{totalLinksCount}</div>
-            <div className="font-code-sm text-code-sm text-secondary">
-              Across user account
-            </div>
+            <p className="font-display text-4xl md:text-5xl font-extrabold text-ink tracking-tight">
+              {totalClicksSelected}
+            </p>
+            <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
+              Past {period} Days Window
+            </p>
           </div>
 
-          <div className="surface-card p-md rounded-lg flex flex-col gap-sm bg-level-1">
-            <div className="flex justify-between items-start">
-              <span className="font-label-caps text-label-caps text-on-surface-variant">Account Avg. Clicks/Link</span>
-              <span className="material-symbols-outlined text-primary text-accent-primary">bar_chart</span>
+          <div className="border-r border-b border-rule p-lg bg-paper">
+            <div className="flex justify-between items-start mb-md">
+              <span className="font-label-caps text-xs uppercase tracking-wider text-muted font-semibold">
+                Account Average
+              </span>
+              <span className="material-symbols-outlined text-muted text-base">monitoring</span>
             </div>
-            <div className="font-headline-md text-headline-md text-on-surface">{avgClicksCount}</div>
-            <div className="font-code-sm text-code-sm text-tertiary">
-              Aggregate performance
+            <p className="font-display text-4xl md:text-5xl font-extrabold text-ink tracking-tight">
+              {avgClicksCount}
+            </p>
+            <p className="text-[11px] text-muted font-label-caps uppercase tracking-wider mt-xs">
+              Across {totalLinksCount} Links
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Time-Series Chart Box ────────────────────────────────────────── */}
+      <section className="mb-xl border border-rule bg-paper">
+        <div className="p-md border-b border-rule flex justify-between items-center bg-paper-2">
+          <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
+            02. Redirection Frequency Graph
+          </h2>
+          <span className="text-[10px] text-muted font-mono">SAMPLING: DAILY</span>
+        </div>
+        <div className="p-lg h-80 w-full relative">
+          {loading ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-paper/90 text-muted font-mono text-xs">
+              Streaming telemetry points...
             </div>
-          </div>
-        </section>
+          ) : !selectedShortUrl ? (
+            <div className="absolute inset-0 flex items-center justify-center text-muted font-mono text-xs">
+              Select an active short URL to visualize data.
+            </div>
+          ) : (
+            <Line data={chartData} options={chartOptions} />
+          )}
+        </div>
+      </section>
 
-        {/* Chart Section */}
-        <section className="surface-card rounded-lg flex flex-col bg-level-1">
-          <div className="border-b border-[#292929] px-lg py-md flex justify-between items-center bg-level-2">
-            <h3 className="font-headline-sm text-headline-sm text-on-surface">
-              Clicks in Period: <span className="text-accent-primary">{totalClicksSelected}</span>
-            </h3>
-          </div>
-          <div className="p-lg h-96 w-full relative">
-            {loading ? (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#151515]/80 text-on-surface-variant">
-                <span className="material-symbols-outlined animate-spin text-[32px] mr-2">progress_activity</span>
-                Loading chart data...
-              </div>
-            ) : !selectedShortUrl ? (
-              <div className="absolute inset-0 flex items-center justify-center text-on-surface-variant font-code-sm">
-                No short URL selected. Create a link to view analytics.
-              </div>
-            ) : (
-              <Line data={chartData} options={chartOptions} />
-            )}
-          </div>
-        </section>
-
-        {/* Data Table Section */}
-        <section className="surface-card rounded-lg overflow-hidden flex flex-col bg-level-1">
-          <div className="border-b border-[#292929] px-lg py-md flex justify-between items-center bg-level-2">
-            <h3 className="font-headline-sm text-headline-sm text-on-surface">Link Performance</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-[#292929] font-label-caps text-label-caps text-on-surface-variant">
-                  <th className="py-md px-lg font-normal">Short URL</th>
-                  <th className="py-md px-lg font-normal">Original URL</th>
-                  <th className="py-md px-lg font-normal text-right">Total Clicks</th>
-                  <th className="py-md px-lg font-normal text-center">Status</th>
+      {/* ── Link Performance Table ──────────────────────────────────────── */}
+      <section className="border border-rule bg-paper">
+        <div className="p-md border-b border-rule bg-paper-2">
+          <h2 className="font-label-caps text-xs uppercase tracking-widest text-ink font-bold">
+            03. Registry Traffic Breakdown
+          </h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse font-mono text-xs">
+            <thead>
+              <tr className="border-b border-rule text-muted font-label-caps text-[11px] uppercase tracking-wider">
+                <th className="p-md font-semibold">Short Code</th>
+                <th className="p-md font-semibold">Target Destination</th>
+                <th className="p-md font-semibold text-right">Total Hits</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-rule">
+              {links.length === 0 ? (
+                <tr>
+                  <td colSpan="3" className="p-lg text-center text-muted font-body">
+                    No links shortened yet.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="font-code-md text-code-md text-on-surface">
-                {links.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="py-md px-lg text-center text-on-surface-variant">
-                      No links shortened yet.
+              ) : (
+                links.map((link) => (
+                  <tr
+                    key={link.id}
+                    onClick={() => {
+                      setSelectedShortUrl(link.shortURl);
+                      setSearchParams({ shortUrl: link.shortURl });
+                    }}
+                    className={`hover:bg-paper-2 transition-colors cursor-pointer ${
+                      selectedShortUrl === link.shortURl
+                        ? 'bg-paper-2 border-l-2 border-accent'
+                        : ''
+                    }`}
+                  >
+                    <td className="p-md text-accent font-bold">
+                      {link.shortURl}
+                    </td>
+                    <td className="p-md text-muted truncate max-w-sm" title={link.orignalUrl}>
+                      {link.orignalUrl}
+                    </td>
+                    <td className="p-md text-right font-bold text-ink">
+                      {link.clickCount || 0}
                     </td>
                   </tr>
-                ) : (
-                  links.map((link) => (
-                    <tr
-                      key={link.id}
-                      onClick={() => {
-                        setSelectedShortUrl(link.shortURl);
-                        setSearchParams({ shortUrl: link.shortURl });
-                      }}
-                      className={`border-b border-[#292929] hover:bg-surface-container-lowest transition-colors cursor-pointer ${
-                        selectedShortUrl === link.shortURl ? 'bg-surface-container-lowest border-l-2 border-[#FF6B2C]' : ''
-                      }`}
-                    >
-                      <td className="py-md px-lg text-primary text-[#FF6B2C]">{link.shortURl}</td>
-                      <td className="py-md px-lg text-on-surface-variant truncate max-w-xs" title={link.orignalUrl}>
-                        {link.orignalUrl}
-                      </td>
-                      <td className="py-md px-lg text-right">{link.clickCount || 0}</td>
-                      <td className="py-md px-lg text-center">
-                        <span className="inline-block px-sm py-xs rounded bg-tertiary/10 border border-tertiary text-tertiary font-code-sm text-code-sm">
-                          Active
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <Toast
         show={showToast}

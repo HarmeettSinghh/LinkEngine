@@ -1,0 +1,45 @@
+/* Hallmark · theme: Grid · genre: editorial
+ * Swiss neo-grotesque systems design · 12-column exposed grid · Archivo typography
+ * pre-emit critique: P5 H5 E5 S5 R5 V5
+ */
+
+.landing-shell {
+  min-height: 100vh;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  position: relative;
+  overflow-x: clip;
+}
+
+/* 12-column grid layout container */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  position: relative;
+  z-index: 1;
+}
+
+/* Stepped bars mark from kit */
+.stepped-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 24px;
+}
+.stepped-bar-1 { width: 4px; height: 30%; background: var(--color-ink); }
+.stepped-bar-2 { width: 4px; height: 55%; background: var(--color-ink); }
+.stepped-bar-3 { width: 4px; height: 80%; background: var(--color-ink); }
+.stepped-bar-4 { width: 4px; height: 100%; background: var(--color-accent); }
+
+/* Modular ruled cell */
+.grid-spec-cell {
+  border-right: 1px solid var(--color-rule);
+  border-bottom: 1px solid var(--color-rule);
+  padding: var(--space-lg);
+  background-color: var(--color-paper);
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.grid-spec-cell:hover {
+  background-color: var(--color-paper-2);
+}

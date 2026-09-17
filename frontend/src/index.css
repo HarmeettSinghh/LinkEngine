@@ -1,121 +1,241 @@
+@import './tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Hallmark Grid Base Layer ────────────────────────────────────────────── */
 @layer base {
+  html, body {
+    overflow-x: clip; /* prevent horizontal scroll across all viewports */
+  }
+
   body {
-    background-color: #0B0B0B;
-    color: #f7ddd5;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Universal focus-visible ring in signal red — keyboard navigation only */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Suppress ring for mouse/pointer clicks */
+  :focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
   }
 }
 
+/* ── Icon font settings ─────────────────────────────────────────────────── */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-/* Style Guidance Custom Utilities */
+/* ── Hallmark Grid Foundation: Exposed 12-Column Hairline Grid ──────────── */
+.rails {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  max-width: 1280px;
+  margin-inline: auto;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-rule) 0,
+    var(--color-rule) 1px,
+    transparent 1px,
+    transparent calc(100% / 12)
+  );
+}
+
+/* ── The Marks Kit ──────────────────────────────────────────────────────── */
+/* The period square: solid 0.52em accent square replacing full stops */
+.period {
+  display: inline-block;
+  width: 0.52em;
+  height: 0.52em;
+  background: var(--color-accent);
+  vertical-align: baseline;
+  margin-left: 2px;
+}
+
+/* The bar: 3px signal rule over a head, snapped to grid tracks */
+.bar-accent {
+  width: calc(100% / 12 * 2);
+  min-width: 48px;
+  height: 3px;
+  background: var(--color-accent);
+}
+
+/* The plate: the single flooded poster moment */
+.plate {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  position: relative;
+  overflow: clip;
+}
+.plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to right,
+    color-mix(in oklab, var(--color-paper) 15%, transparent) 0,
+    color-mix(in oklab, var(--color-paper) 15%, transparent) 1px,
+    transparent 1px,
+    transparent calc(100% / 12)
+  );
+}
+
+/* The numeral voice: giant background watermark numeral (8% ink) */
+.numeral {
+  font-weight: 800;
+  font-size: clamp(96px, 18vw, 240px);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: var(--color-ink-dim);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* The register mark: 1px ink circle with crosshair */
+.register-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--color-ink);
+  border-radius: 50%;
+  position: relative;
+  opacity: 0.4;
+}
+.register-mark::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: var(--color-ink);
+}
+.register-mark::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background: var(--color-ink);
+}
+
+/* ── Buttons (Zero Radius, Hairlines, Signal Red CTA) ────────────────────── */
 .btn-primary {
-  background-color: #FF6B2C;
-  color: #FFFFFF;
-  transition: background-color 200ms, opacity 200ms;
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  border: 1px solid var(--color-accent);
+  border-radius: 0px !important;
+  font-weight: 600;
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out);
 }
 .btn-primary:hover {
-  background-color: #e55a20;
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+.btn-primary:active {
+  opacity: 0.92;
 }
 .btn-primary:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
+}
+.btn-primary:focus-visible {
+  box-shadow: var(--focus-ring);
 }
 
 .btn-secondary {
-  background-color: #151515;
-  border: 1px solid #292929;
-  color: #f7ddd5;
-  transition: background-color 200ms, border-color 200ms;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  color: var(--color-ink);
+  border-radius: 0px !important;
+  font-weight: 600;
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out);
 }
 .btn-secondary:hover {
-  background-color: #1E1E1E;
-  border-color: #333333;
+  background-color: var(--color-paper-2);
+  border-color: var(--color-ink);
+}
+.btn-secondary:focus-visible {
+  box-shadow: var(--focus-ring);
 }
 
-.input-tech {
-  background-color: #0B0B0B;
-  border: 1px solid #292929;
-  color: #f7ddd5;
-  font-family: 'JetBrains Mono', monospace;
-  transition: border-color 200ms;
+/* ── Input (Zero Radius, Hairlines) ──────────────────────────────────────── */
+.input-base {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  color: var(--color-ink);
+  border-radius: 0px !important;
+  transition: border-color var(--dur-base) var(--ease-out);
 }
-.input-tech:focus {
+.input-base:focus {
   outline: none;
-  border-color: #FF6B2C;
-  box-shadow: none;
+  border-color: var(--color-accent);
+}
+.input-base:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.input-base::placeholder {
+  color: var(--color-muted);
+  opacity: 0.7;
 }
 
-.card-surface {
-  background-color: #151515;
-  border: 1px solid #292929;
+/* Input aliases */
+.input-tech   { @apply input-base; }
+.input-field  { @apply input-base; }
+.input-surface { @apply input-base; }
+.surface-input { @apply input-base; }
+
+/* ── Grid Cells & Surfaces (Zero Cards, Zero Radii, Pure Hairlines) ──────── */
+.surface-card, .grid-cell {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  border-radius: 0px !important;
 }
 
-.card-header-divider {
-  border-bottom: 1px solid #292929;
-}
-
-.bg-level-1 {
-  background-color: #151515;
-  border: 1px solid #292929;
-}
+.card-surface { @apply surface-card; }
+.bg-level-1   { @apply surface-card; }
 
 .bg-level-2 {
-  background-color: #1E1E1E;
-  border: 1px solid #333333;
+  background-color: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
+  border-radius: 0px !important;
 }
 
-.surface-card {
-  background-color: #151515;
-  border: 1px solid #292929;
-}
-
-.surface-input {
-  background-color: #0B0B0B;
-  border: 1px solid #292929;
-}
-.surface-input:focus-within {
-  border-color: #FF6B2C;
-}
-
+/* ── Data table rows ─────────────────────────────────────────────────────── */
 .data-table-row {
-  border-bottom: 1px solid #292929;
+  border-bottom: 1px solid var(--color-rule);
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.data-table-row:hover {
+  background-color: var(--color-paper-2);
 }
 .data-table-row:last-child {
   border-bottom: none;
 }
 
+/* ── Status chips ────────────────────────────────────────────────────────── */
 .chip-active {
-  background-color: rgba(255, 107, 44, 0.1);
-  border: 1px solid rgba(255, 107, 44, 0.5);
-  color: #FF6B2C;
+  background-color: var(--color-accent-dim);
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  border-radius: 0px !important;
 }
 
-/* Input Fields generic */
-.input-field {
-  background-color: #0B0B0B;
-  border: 1px solid #292929;
-  color: #f7ddd5;
-  transition: border-color 200ms;
-}
-.input-field:focus {
-  border-color: #FF6B2C;
-  outline: none;
-  box-shadow: none;
-}
-
-.input-surface {
-  background-color: #0B0B0B;
-  border: 1px solid #292929;
-  color: #f7ddd5;
-  transition: border-color 200ms;
-}
-.input-surface:focus {
-  border-color: #FF6B2C;
-  outline: none;
+/* ── Card header divider ─────────────────────────────────────────────────── */
+.card-header-divider {
+  border-bottom: 1px solid var(--color-rule);
 }
