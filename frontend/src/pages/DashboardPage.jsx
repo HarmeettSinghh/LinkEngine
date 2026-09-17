@@ -48,7 +48,6 @@ export default function DashboardPage() {
     if (!longUrl) return;
 
     setShortening(true);
-    setErrorMsg('');
     setLastShortened(null);
 
     try {
@@ -61,7 +60,6 @@ export default function DashboardPage() {
       setLongUrl('');
       fetchLinks();
     } catch (err) {
-      setErrorMsg(err.message || 'Failed to shorten URL');
       setToastType('error');
       setToastMessage('Shortening Failed');
       setToastDesc(err.message || 'Error occurred while shortening URL');
