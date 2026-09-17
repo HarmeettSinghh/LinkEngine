@@ -6,9 +6,11 @@ import com.url.shortner.models.ClickEvent;
 import com.url.shortner.models.User;
 import com.url.shortner.service.UrlMappingService;
 import com.url.shortner.service.UserService;
+import com.url.shortner.service.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -31,15 +33,16 @@ public class UrlMappingController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UrlMappingDTO> createShortUrl(
             @RequestBody Map<String, String> request,
-            Principal principal) {
-
+            Authentication authentication) {
         String originalUrl = request.get("originalUrl");
-
-        User user = userService.findByEmail(principal.getName());
-
-        UrlMappingDTO urlMappingDTO =
-                urlMappingService.createShortUrl(originalUrl, user);
-
+        
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = new User();
+        user.setId(userDetails.getId());
+        user.setEmail(userDetails.getEmail());
+        user.setUsername(userDetails.getUsername());
+        
+        UrlMappingDTO urlMappingDTO = urlMappingService.createShortUrl(originalUrl, user);
         return ResponseEntity.ok(urlMappingDTO);
     }
 
